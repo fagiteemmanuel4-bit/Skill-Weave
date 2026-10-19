@@ -1,9 +1,12 @@
-name: Deploy Static Website to GitHub Pages
+name: Deploy SkillWeave site
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - "index.html"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -11,8 +14,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: "github-pages"
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -21,17 +24,18 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Pages
+      - name: Configure Pages
         uses: actions/configure-pages@v5
-
-      - name: Upload Pages Artifact
+      - name: Prepare public site files
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+      - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
-
+          path: "_site"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

@@ -3,6 +3,7 @@
 **Document Status:** Practical Customer & Product Experiment Plan
 **Research Date / Last Checked:** October 19, 2026
 **Target Goal:** Validate Hypothesis A (Outcome Workflows) & Hypothesis C (Evaluation Evidence)
+**Governing Document:** `AGENTS.md`
 
 *Note on Implementation Status:* This document presents a proposed validation plan and concierge experiment. **No experiment has been run and no developer cohort results have been recorded yet.**
 

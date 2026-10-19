@@ -11,13 +11,13 @@
 ### Product Overview
 * **URL:** https://skills.sh/
 * **Backing:** Vercel Labs (**DOCUMENTED**)
-* **Primary Function:** Curated directory and CLI installer for `SKILL.md` instruction files compatible with 75+ coding agents.
+* **Primary Function:** Curated directory and CLI installer for `SKILL.md` instruction files compatible with coding agents.
 
 ### Public User Journey
 1. **Landing Page:** Minimalist dark-mode landing page displaying featured skills, category filters (e.g., React, Next.js, Testing), search bar, and install commands. (**OBSERVED**)
 2. **Search Experience:** Instant client-side fuzzy search over skill names, descriptions, and author names. (**OBSERVED**)
 3. **Detail Page:** Renders parsed `SKILL.md` content, supported agent list, author attribution (GitHub user/repo link), install button (`npx skills add <owner>/<repo>`), and static verification badge. (**OBSERVED**)
-4. **Installation Flow:** User runs `npx skills add <repo>` in their local terminal. The CLI scans local directories to detect agent configuration files (e.g., `.claude/mcp.json`, `.cursorrules`, `.opencode/skills.json`), parses the target `SKILL.md`, and writes instructions into the local agent's configuration directory. (**DOCUMENTED**)
+4. **Installation Flow:** User runs `npx skills add <repo>` in terminal. The CLI scans local working directories to detect agent configuration files (e.g., `.claude/mcp.json`, `.cursorrules`, `.opencode/skills.json`), parses the target `SKILL.md`, and writes instructions into the agent config directory. (**DOCUMENTED**)
 
 ### Documented / Observed Interface Artifacts
 * **CLI Command:** `npx skills add <github-owner>/<repo>` (**OBSERVED**)
@@ -51,7 +51,7 @@
 1. **Landing Page:** Marketplace grid layout featuring paid and free skills, pricing badges ($0–$49), star ratings, buyer counts, and category tags. (**OBSERVED**)
 2. **Search & Filter:** Search by target agent (Codex, Claude, Cursor), price tier (Free, Paid), or domain (Frontend, DevOps, Security). (**OBSERVED**)
 3. **Detail Page:** Skill marketing pitch, creator profile, pricing checkout button, sample instructions preview, and customer reviews. (**OBSERVED**)
-4. **Purchase & Delivery:** Upon payment, the user receives access to download the skill archive (ZIP) or copy the raw markdown prompt. (**OBSERVED**)
+4. **Purchase & Delivery:** Upon payment, the user receives access to download the skill archive (ZIP) or copy raw markdown prompt text. (**OBSERVED**)
 
 ### Documented / Observed Interface Artifacts
 * **Creator Listing Form Fields:** Title, Short Description, Detailed Instructions (`SKILL.md`), Compatible Agents, Price (USD), Licensing Rights (Personal / Commercial). (**OBSERVED**)
@@ -71,7 +71,7 @@
 * **Primary Function:** Broad directory claiming to index 275,000+ AI agent skills scraped across GitHub repositories.
 
 ### Public User Journey
-1. **Landing Page:** Search-centric layout with trend charts, top categories, and total indexed count counter (275,000+). (**OBSERVED**)
+1. **Landing Page:** Search-centric layout with trend charts, top categories, and total indexed count counter. (**OBSERVED**)
 2. **Search Experience:** Full-text search engine querying scraped GitHub repositories containing markdown files matching skill formats. (**OBSERVED**)
 3. **Detail Page:** Displays scraped GitHub README/SKILL content, star counts, fork counts, author profile, and install snippet (`npx @agentskill.sh/cli@latest install <skill-id>`). (**OBSERVED**)
 
@@ -82,7 +82,7 @@
 ### Architecture Inferences & Clues
 * **Backend:** Automated GitHub crawler scanning public repositories for `SKILL.md`, `.cursorrules`, and `.claude.json` files; indexed in full-text search database. (**INFERRED**)
 * **Strengths:** High scale and broad catalog reach. (**OBSERVED**)
-* **Limitations:** Extremely high noise-to-signal ratio. Scraped unverified repositories pose prompt injection and security risks. Displays security badges without published methodology. (**OBSERVED**)
+* **Limitations:** High noise-to-signal ratio. Scraped unverified repositories pose prompt injection and security risks. Displays security badges without published methodology. (**OBSERVED**)
 
 ---
 

@@ -3,12 +3,13 @@
 **Document Status:** Minimal Testable Product Proposal
 **Research Date / Last Checked:** October 19, 2026
 **Target Goal:** Validate Outcome-Based Workflow Adoption & CLI Verification
+**Governing Document:** `AGENTS.md`
 
-*Note on Implementation Status:* This document represents a proposed MVP scope for future engineering. **No application code, CLI tools, or services have been built or authorized during this research phase.**
+*Note on Implementation Status:* This document represents a proposed MVP scope for future engineering. **No application code, CLI tools, execution engines, or database services have been built or authorized during this research phase.**
 
 ---
 
-## 1. Minimal Initial User Journey (Proposed)
+## 1. Minimal Initial User Journey (Proposed Concierge Hypothesis)
 
 SkillWeave's proposed initial MVP focuses on validating one high-value, outcome-oriented workflow: **"Web Brief to Tested Web Feature"**.
 
@@ -51,8 +52,8 @@ SkillWeave's proposed initial MVP focuses on validating one high-value, outcome-
 ## 3. Explicit Exclusions (What Will NOT Be Built in Proposed MVP)
 
 1. **NO Cloud Execution Engine:** SkillWeave will NOT run agents in the cloud. All agent interactions occur in the developer's local environment.
-2. **NO Cloud Sandboxing Infrastructure:** Test runner executes client-side via CLI; no cloud sandbox VMs will be provisioned.
-3. **NO Monetization or Payment Processing:** Purely open-source and free public registry for MVP.
+2. **NO Cloud Sandboxing Infrastructure:** Test runner executes client-side via CLI; no cloud sandbox VMs will be provisioned during early MVP validation.
+3. **NO Monetization or Payment Processing:** Purely open-source and free public registry for initial MVP.
 4. **NO Drag-and-Drop Visual Workflow Builder:** Workflows are defined strictly in version-controlled `skillweave.yml` files.
 5. **NO Multi-Agent Runtime Expansion Beyond Initial 2:** Supporting only Claude Code and OpenCode/Codex initially.
 

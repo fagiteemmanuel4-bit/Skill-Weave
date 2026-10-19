@@ -1,72 +1,27 @@
-# SkillWeave — Cross-Platform AI Agent Infrastructure
+# SkillWeave
 
-**SkillWeave** is infrastructure designed to make AI-agent capabilities and workflows discoverable, composable, testable, portable, and dependable across tools and platforms.
+SkillWeave is exploring ways to help developers discover, compose, evaluate, and reuse AI skills and workflows with clearer evidence of what works.
 
-## Overview
+## Website preview
 
-This repository contains:
-1. **Research & Engineering Blueprints (`docs/`):** Strategic analysis, competitor reverse engineering, security models, entity schemas, and architectural decision records (ADRs).
-2. **Landing Page Website (`index.html`, `styles.css`, `script.js`):** Lightweight, zero-dependency static site introducing SkillWeave, its outcome-first workflow model, and its 4-axis evidence scorecard.
+The initial landing page is a static site in `index.html`. It is intentionally small and does not require a build step or package installation.
 
----
+### Run locally
 
-## Local Development & Preview
+Open `index.html` in a browser, or serve the repository root with any static HTTP server.
 
-The landing page is a lightweight, modern static site with no required build steps or external node dependencies.
+### Publish with GitHub Pages
 
-To preview the website locally:
+A GitHub Actions workflow is included at `.github/workflows/deploy-pages.yml`. To publish:
 
-### Option 1: Python HTTP Server
-```bash
-# From the repository root directory
-python3 -m http.server 8000
-```
-Open [http://localhost:8000](http://localhost:8000) in your browser.
+1. Open the repository's **Settings → Pages**.
+2. Under **Build and deployment**, choose **GitHub Actions** as the source.
+3. Merge the website branch into `main`.
+4. Open the **Actions** tab and confirm that **Deploy SkillWeave site** completes successfully.
+5. The workflow output will show the published URL. For a project site, the expected URL is usually `https://fagiteemmanuel4-bit.github.io/Skill-Weave/`.
 
-### Option 2: Node.js `serve` / `npx`
-```bash
-npx serve .
-```
+The URL above is an expected GitHub Pages address, not a claim that the site is already live. Publishing depends on repository Pages settings and a successful workflow run.
 
----
+## Current scope
 
-## Deployment Instructions (GitHub Pages)
-
-The website is configured for automated deployment to **GitHub Pages** via the GitHub Actions workflow located at `.github/workflows/deploy.yml`.
-
-### Deployment Setup Steps:
-1. Navigate to the repository settings on GitHub: `Settings > Pages`.
-2. Under **Build and deployment > Source**, select **GitHub Actions**.
-3. When changes are pushed to the `main` branch, the `.github/workflows/deploy.yml` action will automatically deploy the landing page to GitHub Pages.
-
----
-
-## Project Structure
-
-```
-.
-├── index.html                  # Landing page markup
-├── styles.css                  # Clean developer-tool design system & CSS variables
-├── script.js                   # Client-side interactive logic (CLI copy, smooth scroll)
-├── .github/
-│   └── workflows/
-│       └── deploy.yml          # GitHub Pages automated deployment workflow
-├── docs/                       # Research & Engineering Blueprint Documents
-│   ├── PRODUCT_VISION.md
-│   ├── COMPETITIVE_ANALYSIS.md
-│   ├── REVERSE_ENGINEERING_NOTES.md
-│   ├── MVP_SCOPE.md
-│   ├── ARCHITECTURE.md
-│   ├── DATA_MODEL.md
-│   ├── SECURITY_MODEL.md
-│   ├── DECISIONS.md
-│   ├── IMPLEMENTATION_BACKLOG.md
-│   └── VALIDATION_PLAN.md
-└── AGENTS.md                   # Repository guardrails and operating principles
-```
-
----
-
-## License
-
-MIT License. See individual research blueprints under `docs/` for details.
+This is a landing-page starter only. Workflow discovery, accounts, execution, evaluation, and other product features are not implemented yet. The product preview is explicitly illustrative, not live data.
