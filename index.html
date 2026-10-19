@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillWeave — Build Better AI Workflows</title>
+  <meta name="description" content="Discover, evaluate, and reuse AI skills and workflows with clearer evidence of what works. Dependable, cross-platform infrastructure for AI agents.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="brand" aria-label="SkillWeave Home">
+        <svg class="brand-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"></path>
+        </svg>
+        <span class="brand-text">SkillWeave</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#how-it-works" class="nav-link">How it works</a>
+        <a href="#evidence" class="nav-link">Evidence model</a>
+        <a href="#preview" class="nav-link">Explore workflows</a>
+        <a href="https://github.com/fagiteemmanuel4-bit/Skill-Weave" class="nav-link nav-github" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-container">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span class="badge-text">Cross-Platform AI Agent Infrastructure</span>
+        </div>
+
+        <h1 class="hero-title">Build better AI workflows.</h1>
+        <p class="hero-subtitle">
+          Discover, evaluate, and reuse AI skills with clearer evidence of what works.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#preview" class="btn btn-primary" id="explore-btn">Explore workflows</a>
+          <a href="#how-it-works" class="btn btn-secondary" id="how-it-works-btn">How it works</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Preview Section -->
+    <section id="preview" class="preview-section">
+      <div class="container">
+        <div class="preview-card">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag">SAMPLE WORKFLOW</span>
+              <h2 class="preview-workflow-title">Web Brief to Tested Web Component</h2>
+            </div>
+            <div class="preview-version">v1.0.2 • pinned git@f04b3d6</div>
+          </div>
+
+          <div class="preview-grid">
+            <!-- Left: Workflow DAG Steps -->
+            <div class="workflow-steps-pane">
+              <h3 class="pane-label">WORKFLOW SEQUENCE (DAG)</h3>
+
+              <ol class="steps-list">
+                <li class="step-item step-completed">
+                  <div class="step-num">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Web Brief & Architecture Plan</div>
+                    <div class="step-meta">Skill: <code>skillweave/brief-parser</code></div>
+                  </div>
+                  <span class="step-status">Passed</span>
+                </li>
+
+                <li class="step-item step-completed">
+                  <div class="step-num">2</div>
+                  <div class="step-content">
+                    <div class="step-title">UI Component Implementation</div>
+                    <div class="step-meta">Skill: <code>shadcn/component-builder</code></div>
+                  </div>
+                  <span class="step-status">Passed</span>
+                </li>
+
+                <li class="step-item step-completed">
+                  <div class="step-num">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Accessibility Compliance Audit</div>
+                    <div class="step-meta">Skill: <code>a11y/wcag21-checker</code></div>
+                  </div>
+                  <span class="step-status">Passed</span>
+                </li>
+
+                <li class="step-item step-completed">
+                  <div class="step-num">4</div>
+                  <div class="step-content">
+                    <div class="step-title">E2E Unit & Integration Test Suite</div>
+                    <div class="step-meta">Skill: <code>testing/vitest-runner</code></div>
+                  </div>
+                  <span class="step-status">Passed</span>
+                </li>
+              </ol>
+
+              <div class="cli-install-box">
+                <span class="cli-label">Install via CLI:</span>
+                <code class="cli-command">npx skillweave add workflow/web-brief-to-feature</code>
+                <button class="copy-btn" id="copy-cli-btn" aria-label="Copy CLI command">Copy</button>
+              </div>
+            </div>
+
+            <!-- Right: 4-Axis Evidence Scorecard -->
+            <div class="evidence-pane">
+              <h3 class="pane-label">4-AXIS EVIDENCE SCORECARD</h3>
+              <p class="pane-subtext">Independent, unbundled evaluation signals</p>
+
+              <div class="evidence-cards-grid">
+                <!-- Card 1: Provenance -->
+                <div class="evidence-card">
+                  <div class="card-icon icon-provenance">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  </div>
+                  <div class="card-body">
+                    <div class="card-title">Provenance</div>
+                    <div class="card-value">Verified GitHub Repo</div>
+                    <div class="card-detail">Commit SHA: <code>f04b3d6</code></div>
+                  </div>
+                </div>
+
+                <!-- Card 2: License -->
+                <div class="evidence-card">
+                  <div class="card-icon icon-license">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="13" y2="12"></line></svg>
+                  </div>
+                  <div class="card-body">
+                    <div class="card-title">License</div>
+                    <div class="card-value">MIT Compliant</div>
+                    <div class="card-detail">OSI Approved Open Source</div>
+                  </div>
+                </div>
+
+                <!-- Card 3: Security Scan -->
+                <div class="evidence-card">
+                  <div class="card-icon icon-security">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                  </div>
+                  <div class="card-body">
+                    <div class="card-title">Security Static Scan</div>
+                    <div class="card-value">0 Injection Risks</div>
+                    <div class="card-detail">Disclosed host permissions</div>
+                  </div>
+                </div>
+
+                <!-- Card 4: Evaluation Evidence -->
+                <div class="evidence-card">
+                  <div class="card-icon icon-eval">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                  </div>
+                  <div class="card-body">
+                    <div class="card-title">Evaluation Record</div>
+                    <div class="card-value">100% Test Pass Rate</div>
+                    <div class="card-detail">Task fixture: WCAG 2.1 AA</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Designed for reliable execution</h2>
+          <p class="section-subtitle">
+            Developers need more than an unorganized list of prompts. SkillWeave brings discipline to AI capabilities.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-number">01</div>
+            <h3 class="feature-title">Outcome-First Workflows</h3>
+            <p class="feature-text">
+              Find complete multi-step recipes tailored to specific developer jobs rather than hunting for isolated, uncoordinated skill files.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-number">02</div>
+            <h3 class="feature-title">Version Locking & Compatibility</h3>
+            <p class="feature-text">
+              Lock exact component revisions and agent runtime configurations (`.claude/`, `.opencode/`) to prevent silent failures when models or tools update.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-number">03</div>
+            <h3 class="feature-title">Portable Manifests</h3>
+            <p class="feature-text">
+              Standardized `skillweave.yml` manifests run across supported coding agent platforms without locking your team into a single proprietary vendor.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Evidence Model Section -->
+    <section id="evidence" class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Evidence over popularity</h2>
+          <p class="section-subtitle">
+            Star counts and download vanity metrics do not guarantee code quality or safety. SkillWeave separates trust into distinct, objective dimensions.
+          </p>
+        </div>
+
+        <div class="principles-grid">
+          <div class="principle-box">
+            <h3 class="principle-title">No Unexplained Single Scores</h3>
+            <p class="principle-text">
+              We never conflate source license, security vulnerability scans, and task completion rates into a single meaningless "95/100" score. Each dimension remains transparent.
+            </p>
+          </div>
+
+          <div class="principle-box">
+            <h3 class="principle-title">Reproducible Task Fixtures</h3>
+            <p class="principle-text">
+              Evaluation records log the exact agent runtime, task fixture, pass/fail result, duration, and execution logs so results can be independently verified.
+            </p>
+          </div>
+
+          <div class="principle-box">
+            <h3 class="principle-title">Explicit Permissions & Safety</h3>
+            <p class="principle-text">
+              Static security scanners inspect instructions for prompt injection, arbitrary bash calls, and secret accesses before you run code on your workstation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <span class="brand-text">SkillWeave</span>
+        <span class="footer-copy">— Open Infrastructure for AI Agent Workflows</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/fagiteemmanuel4-bit/Skill-Weave" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+        <a href="#main-content">Back to top</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
