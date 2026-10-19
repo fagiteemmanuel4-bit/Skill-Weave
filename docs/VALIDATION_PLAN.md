@@ -1,26 +1,28 @@
-# Validation Plan & Concierge Experiment — SkillWeave
+# Validation Plan & Proposed Concierge Experiment — SkillWeave
 
 **Document Status:** Practical Customer & Product Experiment Plan
-**Last Updated:** February 2025
-**Target:** Validate Hypothesis A (Outcome Workflows) & Hypothesis C (Evaluation Evidence)
+**Research Date / Last Checked:** October 19, 2026
+**Target Goal:** Validate Hypothesis A (Outcome Workflows) & Hypothesis C (Evaluation Evidence)
+
+*Note on Implementation Status:* This document presents a proposed validation plan and concierge experiment. **No experiment has been run and no developer cohort results have been recorded yet.**
 
 ---
 
-## 1. Executive Experiment Overview: Concierge Experiment
+## 1. Executive Experiment Proposal: Concierge Experiment
 
-Before investing engineering resources into cloud sandboxes or complex backend services, SkillWeave will conduct a structured **Concierge Experiment** with a cohort of 30 senior software developers building web applications.
+Before investing engineering resources into cloud sandboxes or complex backend services, SkillWeave proposes conducting a lightweight 2-week **Concierge Experiment** with a cohort of 30 senior software developers building web applications.
 
 ### Core Strategic Objective
-Demonstrate that developers complete complex web engineering tasks faster, with higher accessibility/quality compliance, and with greater confidence when using a **curated, version-pinned, multi-step SkillWeave workflow** compared to unassisted agent usage or ad-hoc atomic skills.
+Demonstrate whether developers complete complex web engineering tasks faster, with higher accessibility/quality compliance, and with greater confidence when using a **curated, version-pinned, multi-step SkillWeave workflow** compared to unassisted agent usage or ad-hoc atomic skills.
 
 ---
 
-## 2. Task Fixture Definition: "Web Brief to Feature"
+## 2. Proposed Task Fixture Definition: "Web Brief to Feature"
 
 ### Target Task Brief
 *"Build a responsive, accessible React pricing card component with monthly/annual billing toggles, feature checkmarks, CTA buttons, and WCAG 2.1 AA accessibility compliance."*
 
-### Cohort Segmentation (30 Senior Developers)
+### Proposed Cohort Segmentation (30 Senior Developers)
 
 * **Cohort A (Control - Baseline):** 10 developers using their normal coding agent setup (e.g., raw Claude Code or Cursor) with no third-party skills or structured prompts.
 * **Cohort B (Disjointed Atomic Skills):** 10 developers using 3 separate, uncoordinated atomic skills downloaded from open directories (e.g., React skill, Tailwind skill, Accessibility prompt).
@@ -28,16 +30,18 @@ Demonstrate that developers complete complex web engineering tasks faster, with 
 
 ---
 
-## 3. Measurable Outcome Metrics & Baselines
+## 3. Proposed Target Metrics & Baselines
 
-| Metric | Measurement Method | Target Criteria for Cohort C Success |
+*Note: All values below are target benchmarks for experiment evaluation—not measured historical results.*
+
+| Metric | Measurement Method | Proposed Target Criteria for Cohort C Success |
 | :--- | :--- | :--- |
-| **Task Completion Time** | Stopwatch / Telemetry log | ≥35% time reduction vs. Cohort A & B |
-| **Accessibility Defect Count** | Automated `axe-core` scan | Zero Critical / Serious WCAG AA violations |
-| **Unit Test Suite Pass Rate** | Vitest test execution | 100% test pass rate out of the box |
-| **Human Interventions Count** | Developer log of manual prompt fixes required | <2 interventions per developer |
-| **Developer Confidence Rating** | Post-task survey (1–5 scale) | Average score ≥ 4.5 / 5.0 |
-| **Willingness to Pay Intent** | Qualitative survey & deposit request | ≥25% express intent to pay for team registry |
+| **Task Completion Time** | Stopwatch / Telemetry log | Proposed target: ≥35% time reduction vs. Cohort A & B |
+| **Accessibility Defect Count** | Automated `axe-core` scan | Proposed target: Zero Critical / Serious WCAG AA violations |
+| **Unit Test Suite Pass Rate** | Vitest test execution | Proposed target: 100% test pass rate out of the box |
+| **Human Interventions Count** | Developer log of manual prompt fixes required | Proposed target: <2 interventions per developer |
+| **Developer Confidence Rating** | Post-task survey (1–5 scale) | Proposed target: Average score ≥ 4.5 / 5.0 |
+| **Willingness to Pay Intent** | Qualitative survey & deposit request | Proposed target: ≥25% express intent to pay for team registry |
 
 ---
 
@@ -45,7 +49,7 @@ Demonstrate that developers complete complex web engineering tasks faster, with 
 
 ```
                        +-----------------------------------+
-                       | Concierge Experiment Results      |
+                       | Proposed Concierge Experiment     |
                        +-----------------------------------+
                                          |
                +-------------------------+-------------------------+

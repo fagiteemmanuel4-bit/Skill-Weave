@@ -1,14 +1,16 @@
 # Proposed Data Model & Entity Schemas — SkillWeave
 
 **Document Status:** Proposed Entity & Relationship Schemas
-**Last Updated:** February 2025
-**Schema Standard:** Zod / JSON Schema compliant definitions
+**Research Date / Last Checked:** October 19, 2026
+**Schema Standard:** Proposed Zod / JSON Schema compliant definitions
+
+*Note on Implementation Status:* All schemas presented in this document are **proposals for future engineering**. No database migrations, ORM schemas, or live API endpoints have been implemented during this research phase.
 
 ---
 
-## 1. Entity-Relationship Model Overview
+## 1. Entity-Relationship Model Overview (Proposed)
 
-SkillWeave's data architecture establishes clear boundaries between atomic **Skills**, composable **Workflows**, immutable **Versions/Revisions**, and independent **Evaluation / Security Evidence**.
+SkillWeave's proposed data architecture establishes clear boundaries between atomic **Skills**, composable **Workflows**, immutable **Versions/Revisions**, and independent **Evaluation / Security Evidence**.
 
 ```
 +-------------------+ 1       N +-----------------------+
@@ -37,13 +39,13 @@ SkillWeave's data architecture establishes clear boundaries between atomic **Ski
 
 ---
 
-## 2. Core Entity Schemas (JSON Schema / Zod Equivalent)
+## 2. Core Entity Schemas (Proposed JSON Schema Definitions)
 
-### Schema A: Workflow Manifest (`skillweave.yml` / `skillweave.json`)
+### Schema A: Workflow Manifest Proposal (`skillweave.yml` / `skillweave.json`)
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "SkillWeaveWorkflowManifest",
+  "title": "SkillWeaveWorkflowManifestProposal",
   "type": "object",
   "required": ["id", "version", "name", "description", "target_agents", "steps"],
   "properties": {
@@ -90,11 +92,11 @@ SkillWeave's data architecture establishes clear boundaries between atomic **Ski
 }
 ```
 
-### Schema B: Immutable Evaluation Record Schema (`EvaluationRun`)
+### Schema B: Proposed Immutable Evaluation Record Schema (`EvaluationRun`)
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "SkillWeaveEvaluationRun",
+  "title": "SkillWeaveEvaluationRunProposal",
   "type": "object",
   "required": ["run_id", "workflow_id", "workflow_commit_sha", "agent_runtime", "timestamp", "outcome"],
   "properties": {
@@ -130,11 +132,11 @@ SkillWeave's data architecture establishes clear boundaries between atomic **Ski
 }
 ```
 
-### Schema C: Security Finding Record Schema
+### Schema C: Proposed Security Finding Record Schema
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "SkillWeaveSecurityFinding",
+  "title": "SkillWeaveSecurityFindingProposal",
   "type": "object",
   "required": ["finding_id", "target_commit_sha", "severity", "category", "description"],
   "properties": {
@@ -152,7 +154,7 @@ SkillWeave's data architecture establishes clear boundaries between atomic **Ski
 
 ---
 
-## 3. Data Integrity & State Transition Rules
+## 3. Proposed Data Integrity & State Transition Rules
 
 1. **Immutable Component Revisions:** A published `WorkflowVersion` or `SkillVersion` record CANNOT be updated or deleted. Any modification requires publishing a new Git Commit SHA / SemVer.
 2. **Deterministic Lockfile Generation:** The `skillweave.lock` file generated locally by the CLI pins the exact Git SHA and cryptographic hash of every sub-skill in the DAG.

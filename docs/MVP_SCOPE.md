@@ -1,27 +1,29 @@
-# MVP Scope — SkillWeave Initial Release
+# MVP Scope — SkillWeave Proposed Initial Release
 
-**Document Status:** Minimal Testable Product Definition
-**Last Updated:** February 2025
+**Document Status:** Minimal Testable Product Proposal
+**Research Date / Last Checked:** October 19, 2026
 **Target Goal:** Validate Outcome-Based Workflow Adoption & CLI Verification
+
+*Note on Implementation Status:* This document represents a proposed MVP scope for future engineering. **No application code, CLI tools, or services have been built or authorized during this research phase.**
 
 ---
 
-## 1. Minimal Initial User Journey
+## 1. Minimal Initial User Journey (Proposed)
 
-SkillWeave's initial MVP focuses on validating one high-value, outcome-oriented workflow: **"Web Brief to Tested Web Feature"**.
+SkillWeave's proposed initial MVP focuses on validating one high-value, outcome-oriented workflow: **"Web Brief to Tested Web Feature"**.
 
-### Step-by-Step Developer Journey
-1. **Discovery:** The developer searches the SkillWeave Registry Web UI or CLI for a specific outcome: `"Web Brief to Accessible Web Component"`.
+### Step-by-Step Developer Journey (Proposed)
+1. **Discovery:** The developer searches the proposed SkillWeave Registry Web UI or CLI for a specific outcome: `"Web Brief to Accessible Web Component"`.
 2. **Evaluation Inspection:** The developer views the workflow page, inspecting four explicit trust signals:
    - **Provenance & License:** GitHub repo source, commit SHA, MIT License.
    - **Security Findings:** Static scan output (No arbitrary script execution, no unauthorized network domains).
-   - **Compatibility:** Certified for Claude Code (v0.2+) and OpenCode (v1.0+).
-   - **Evaluation Evidence:** 100% pass rate on standard `a11y-wcag21` accessibility fixtures and Vitest unit test suite.
-3. **Installation:** The developer runs in their project root:
+   - **Compatibility:** Certified for Claude Code and OpenCode.
+   - **Evaluation Evidence:** Pass/fail execution log on standard accessibility fixtures and test suites.
+3. **Installation (Proposed CLI Command):** The developer runs in their project root:
    ```bash
    npx skillweave add workflow/web-brief-to-feature
    ```
-4. **Agent Auto-Configuration:** The SkillWeave CLI auto-detects local agent configs (`.claude/` or `.opencode/`), creates a `skillweave.lock` file, and installs the version-pinned workflow manifest (`skillweave.yml`) and sub-skills.
+4. **Agent Auto-Configuration:** The CLI auto-detects local agent configs (`.claude/` or `.opencode/`), creates a `skillweave.lock` file, and installs the version-pinned workflow manifest (`skillweave.yml`) and sub-skills.
 5. **Local Execution & Verification:** The developer executes the workflow through their AI agent. Post-execution, the developer runs:
    ```bash
    npx skillweave test
@@ -30,23 +32,23 @@ SkillWeave's initial MVP focuses on validating one high-value, outcome-oriented 
 
 ---
 
-## 2. Minimum Core Feature Set
+## 2. Minimum Proposed Feature Set
 
-### A. SkillWeave Manifest Specification (`skillweave.yml`)
-* Formal schema defining workflow name, version, author, license, target agent runtimes, ordered execution steps, input parameters, and required sub-skills.
+### A. SkillWeave Manifest Specification (`skillweave.yml` Proposal)
+* Formal Zod schema defining workflow name, version, author, license, target agent runtimes, ordered execution steps, input parameters, and required sub-skills.
 
-### B. SkillWeave CLI (`npx skillweave`)
+### B. SkillWeave CLI (`npx skillweave` Proposal)
 * `skillweave search <query>`: Search public workflow registry.
 * `skillweave add <workflow-id>`: Download manifest, verify signatures, detect local agent, write pinned agent instructions, and generate `skillweave.lock`.
 * `skillweave list`: List locally installed workflows and their lockfile state.
 * `skillweave test`: Execute local acceptance test scripts for installed workflows and log structured results.
 
-### C. SkillWeave Web Registry Interface
+### C. SkillWeave Web Registry Interface (Proposed)
 * Searchable web portal displaying workflow listings, step-by-step DAG visualization, version history, and four-axis trust scorecard.
 
 ---
 
-## 3. Explicit Exclusions (What Will NOT Be Built in MVP)
+## 3. Explicit Exclusions (What Will NOT Be Built in Proposed MVP)
 
 1. **NO Cloud Execution Engine:** SkillWeave will NOT run agents in the cloud. All agent interactions occur in the developer's local environment.
 2. **NO Cloud Sandboxing Infrastructure:** Test runner executes client-side via CLI; no cloud sandbox VMs will be provisioned.
@@ -56,7 +58,7 @@ SkillWeave's initial MVP focuses on validating one high-value, outcome-oriented 
 
 ---
 
-## 4. Acceptance Criteria & Definition of Done
+## 4. Proposed Acceptance Criteria & Definition of Done
 
 * **Criterion 1 (Manifest Validation):** The CLI strictly validates `skillweave.yml` schemas using Zod/JSON-Schema, rejecting invalid step ordering or missing dependencies.
 * **Criterion 2 (Multi-Agent Writer):** `skillweave add` correctly auto-detects `.claude/` and `.opencode/` config paths and writes pinned instructions without corrupting existing rules.

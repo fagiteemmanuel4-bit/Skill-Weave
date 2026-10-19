@@ -1,14 +1,16 @@
-# Security Model & Threat Analysis — SkillWeave
+# Security Model & Threat Analysis — SkillWeave Framework Proposal
 
-**Document Status:** Trust & Security Framework Blueprint
-**Last Updated:** February 2025
+**Document Status:** Trust & Security Framework Blueprint Proposal
+**Research Date / Last Checked:** October 19, 2026
 **Core Principle:** Third-party skills and agent instructions are UNTRUSTED DATA
+
+*Note on Implementation Status:* This document outlines the proposed security principles and threat model. **No automated security scanners or sandboxing infrastructure have been implemented during this research phase.**
 
 ---
 
 ## 1. Threat Model & Attack Vectors
 
-SkillWeave treats all third-party AI skills, prompts, and workflow manifests as inherently untrusted data inputs.
+SkillWeave proposes treating all third-party AI skills, prompts, and workflow manifests as inherently untrusted data inputs.
 
 ```
 +-------------------------------------------------------------------------+
@@ -38,13 +40,13 @@ SkillWeave treats all third-party AI skills, prompts, and workflow manifests as 
 
 ---
 
-## 2. Layered Defense Architecture
+## 2. Layered Defense Architecture (Proposed)
 
-SkillWeave employs a multi-layered defense model rather than relying on a single security gate:
+SkillWeave proposes a multi-layered defense model rather than relying on a single security gate:
 
 ```
 +-------------------------------------------------------------------------+
-|                        4-AXIS TRUST SCORECARD                           |
+|                    PROPOSED 4-AXIS TRUST SCORECARD                      |
 |                                                                         |
 |  +--------------------------+          +-----------------------------+  |
 |  | 1. PROVENANCE & IDENTITY |          | 2. LICENSE COMPLIANCE       |  |
@@ -60,17 +62,17 @@ SkillWeave employs a multi-layered defense model rather than relying on a single
 +-------------------------------------------------------------------------+
 ```
 
-### Layer 1: Provenance Pinning & Cryptographic Hash
+### Layer 1: Provenance Pinning & Cryptographic Hash (Proposed)
 * All workflow components must be pinned to exact Git Commit SHAs.
 * The CLI calculates SHA-256 integrity hashes for all installed instruction files and verifies them against `skillweave.lock`.
 
-### Layer 2: Static Security Scanning Engine
+### Layer 2: Static Security Scanning Engine (Proposed)
 * Automated scanner inspects workflow manifests and `SKILL.md` text prior to registry publishing, checking for:
   - Suspicious execution patterns (`eval`, `exec`, `curl | sh`).
   - High-risk environment variable accesses (`AWS_SECRET_ACCESS_KEY`, `GITHUB_TOKEN`).
   - Known prompt injection signatures and system-prompt escape delimiters.
 
-### Layer 3: Disclosed Permission Model
+### Layer 3: Disclosed Permission Model (Proposed)
 * Workflow manifests (`skillweave.yml`) must explicitly declare required host permissions:
   ```yaml
   permissions:
@@ -83,7 +85,7 @@ SkillWeave employs a multi-layered defense model rather than relying on a single
       allow_commands: ["npm test", "npx vitest"]
   ```
 
-### Layer 4: Local Workstation Protection
+### Layer 4: Local Workstation Protection (Proposed)
 * The `skillweave` CLI operates with non-elevated user permissions.
 * Before writing agent rules, the CLI creates a local backup copy of existing agent configurations (`.claude/mcp.json.bak`).
 
