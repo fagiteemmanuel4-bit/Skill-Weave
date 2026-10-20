@@ -2,12 +2,12 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 const root = path.resolve(__dirname, "..");
-const required = ["index.html", "library.html", "skill.html", "download.html", "app.js", "styles.css"];
+const required = ["index.html", "library.html", "skill.html", "download.html", "app.js", "styles.css", "catalog.json"];
 for (const file of required) {
   if (!fs.existsSync(path.join(root, file))) throw new Error("Missing required site file: " + file);
 }
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
-for (const marker of ["search/repositories", "SKILL.md", "Download repository ZIP", "Public signal score", "rate-limited"]) {
+for (const marker of ["search/repositories", "SKILL.md", "Download full repository", "Public signal score", "rate-limited"]) {
   if (!app.includes(marker)) throw new Error("Expected library capability marker missing: " + marker);
 }
 for (const file of ["library.html", "skill.html", "download.html"]) {
