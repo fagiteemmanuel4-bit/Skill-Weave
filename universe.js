@@ -112,19 +112,22 @@
       if(!responses[0].ok||!responses[1].ok)throw new Error("GitHub metadata is temporarily unavailable.");
       var meta=await responses[0].json();
       var dirs=await responses[1].json();
+      var contributors=[];
+      try{var contributorResponse=await fetch("https://api.github.com/repos/anthropics/skills/contributors?per_page=3",{headers:{"Accept":"application/vnd.github+json"}});if(contributorResponse.ok)contributors=await contributorResponse.json();}catch(ignore){}
       var folders=dirs.filter(function(x){return x.type==="dir";}).slice(0,6);
       var items=await Promise.all(folders.map(async function(folder){
         var path="skills/"+folder.name+"/SKILL.md";
         var check=await fetch("https://api.github.com/repos/anthropics/skills/contents/"+path,{headers:{"Accept":"application/vnd.github+json"}});
         if(!check.ok)return null;
         var content=await check.json();
-        return {skillName:folder.name.replace(/-/g," ").replace(/\b\w/g,function(m){return m.toUpperCase();}),full_name:"anthropics/skills",path:path,description:"Reusable instructions from Anthropic's public skills collection.",stargazers_count:meta.stargazers_count,owner:meta.owner,contributors:[],fileUrl:content.html_url};
+        return {skillName:folder.name.replace(/-/g," ").replace(/\b\w/g,function(m){return m.toUpperCase();}),full_name:"anthropics/skills",path:path,description:"Reusable instructions from Anthropic's public skills collection.",stargazers_count:meta.stargazers_count,owner:meta.owner,contributors:contributors,fileUrl:content.html_url};
       }));
       var rows=items.filter(Boolean).slice(0,5);
       if(!rows.length)throw new Error("No skill files were returned.");
       renderRows(rows);
       status=document.getElementById("leaderboard-status");
       if(skillCount)skillCount.textContent=numberFmt(rows.length)+" shown";
+      var contributorStat=document.querySelector(".stat-item:nth-child(3) .stat-number");if(contributorStat)contributorStat.textContent=contributors.length?contributors.length+" visible":"Not available";
       var note=document.getElementById("stats-note");
       if(note)note.textContent="Showing "+rows.length+" verified SKILL.md files from one public collection. Explore the library for broader GitHub search.";
       if(status)status.textContent="Source: anthropics/skills · "+numberFmt(meta.stargazers_count)+" repository stars. Weekly runs are not reported by GitHub.";
@@ -133,6 +136,7 @@
       renderRows(rows);
       status=document.getElementById("leaderboard-status");
       if(skillCount)skillCount.textContent="3 shown";
+      var contributorStat=document.querySelector(".stat-item:nth-child(3) .stat-number");if(contributorStat)contributorStat.textContent="Not available";
       if(status)status.textContent="Live GitHub metadata is unavailable right now. These links point to known skill paths; verify the source before use.";
     }
   }
