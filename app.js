@@ -356,7 +356,6 @@
       if (currentLanguage) url.searchParams.set("language", currentLanguage); else url.searchParams.delete("language");
       if (currentMinStars) url.searchParams.set("stars", String(currentMinStars)); else url.searchParams.delete("stars");
       if (currentExcludeArchived) url.searchParams.delete("archived"); else url.searchParams.set("archived", "all");
-      if (currentFavoritesOnly) url.searchParams.set("saved", "1"); else url.searchParams.delete("saved");
       copyText(url.toString(), this);
     });
     $("previous-page").addEventListener("click", function () { if (currentPage > 1) { currentPage--; searchRepos(false); window.scrollTo({top:260,behavior:"smooth"}); } });
