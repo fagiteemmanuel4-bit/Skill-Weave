@@ -10,6 +10,10 @@ const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
 for (const marker of ["search/repositories", "SKILL.md", "Download full repository", "Public signal score", "rate-limited"]) {
   if (!app.includes(marker)) throw new Error("Expected library capability marker missing: " + marker);
 }
+const libraryHtml = fs.readFileSync(path.join(root, "library.html"), "utf8");
+for (const marker of ['id="favorites-toggle"', 'id="exclude-archived"', 'id="export-results"', 'id="copy-search-link"']) {
+  if (!libraryHtml.includes(marker)) throw new Error("Missing library interaction: " + marker);
+}
 for (const file of ["library.html", "skill.html", "download.html"]) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
   if (!html.includes('href="styles.css"')) throw new Error(file + " does not load styles.css");
