@@ -38,6 +38,8 @@ concurrency:
 
 jobs:
   test:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -46,6 +48,10 @@ jobs:
         run: node scripts/smoke-test.cjs
 
   deploy:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: test
     environment:
