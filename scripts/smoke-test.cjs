@@ -7,7 +7,7 @@ for (const file of required) {
   if (!fs.existsSync(path.join(root, file))) throw new Error("Missing required site file: " + file);
 }
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
-for (const marker of ["search/repositories", "SKILL.md", "Download full repository", "Public signal score", "rate-limited"]) {
+for (const marker of ["search/repositories", "SKILL.md", "Download full repository", "Public signal score", "securityReviewHTML", "rate-limited"]) {
   if (!app.includes(marker)) throw new Error("Expected library capability marker missing: " + marker);
 }
 const libraryHtml = fs.readFileSync(path.join(root, "library.html"), "utf8");
