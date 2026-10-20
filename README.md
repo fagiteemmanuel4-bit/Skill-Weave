@@ -36,13 +36,28 @@ Then open `http://localhost:8000/`.
 
 ## Validation and deployment
 
+### Deploy on Vercel
+
+This repository is prepared as a static site for Vercel. It does not require a build step or a package manager. The root `vercel.json` configures the project root as the output directory, clean URLs (for example, `/library`), and baseline response headers.
+
+1. In Vercel, choose **Add New → Project**.
+2. Import `fagiteemmanuel4-bit/Skill-Weave` from GitHub and authorize repository access if prompted.
+3. Keep the **Root Directory** as `./`.
+4. Select **Other** as the framework preset if Vercel does not detect one automatically.
+5. Leave the build command empty and set the output directory to `.` if Vercel asks for it.
+6. Deploy. Future pushes to `main` should trigger deployments once the Git repository is connected.
+
+Vercel creates the public `.vercel.app` URL after a successful deployment. The exact URL is assigned by Vercel and cannot be truthfully stated until the project is created there.
+
+### Validation
+
 Run the no-dependency smoke checks with:
 
 ```bash
 node scripts/smoke-test.cjs
 ```
 
-The Pages workflow runs the smoke checks on pull requests and deploys the site from `main` after checks pass. GitHub Pages must be configured to use GitHub Actions under repository **Settings → Pages**. Confirm a successful run in the repository's Actions tab before treating the public URL as live.
+The GitHub Pages workflow remains available as an alternative host. For Vercel, use the steps above and verify the first deployment and its assigned URL in the Vercel dashboard. Confirm a successful CI run in the repository's Actions tab before treating a deployment as validated.
 
 Expected project URL: https://fagiteemmanuel4-bit.github.io/Skill-Weave/
 
