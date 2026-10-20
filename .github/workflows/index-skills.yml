@@ -7,15 +7,20 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: skillweave-catalogue-index
   cancel-in-progress: false
 
 jobs:
-  index:
+  index-and-deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
@@ -33,10 +38,23 @@ jobs:
         run: |
           if git diff --quiet -- catalog.json; then
             echo "Catalogue is unchanged."
-            exit 0
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add catalog.json
+            git commit -m "chore: refresh public skill catalogue"
+            git push origin HEAD:main
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add catalog.json
-          git commit -m "chore: refresh public skill catalogue"
-          git push origin HEAD:main
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Prepare public site files
+        run: |
+          mkdir -p _site
+          cp index.html library.html skill.html download.html app.js styles.css catalog.json _site/
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy refreshed site
+        id: deployment
+        uses: actions/deploy-pages@v4
