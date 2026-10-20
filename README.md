@@ -12,7 +12,7 @@ SkillWeave is an independent, source-first library for discovering public AI-age
 
 ## How search works
 
-The library first loads `catalog.json`, a generated index of public files named `SKILL.md`. If no populated index is available, it falls back to GitHub repository search. Repository detail pages fetch live public repository metadata and the default branch's file tree from GitHub. Saved skills are stored only in the current browser; CSV export contains the current filtered catalogue results.
+The library first loads `catalog.json`, a generated index of public files named `SKILL.md`. If no populated index is available, it falls back to GitHub repository search. Repository detail pages fetch live public repository metadata and the default branch's file tree from GitHub, and run small text-pattern checks that flag commands or access patterns worth reviewing. These checks are not a security audit. Saved skills are stored only in the current browser; CSV export contains the current filtered catalogue results.
 
 The scheduled indexer is `scripts/build-index.cjs` and `.github/workflows/index-skills.yml` runs it daily and on manual dispatch. It uses the GitHub Code Search API through the workflow's `GITHUB_TOKEN`. It queries multiple skill-related terms, deduplicates repository/path pairs, and commits the generated catalogue when it changes. GitHub search has rate limits and per-query result caps; therefore, the index is best-effort and **does not guarantee complete coverage of GitHub or a fixed 10,000-skill count**. Inspect the generated timestamp and `totalSkills` in `catalog.json` for the actual indexed count.
 
