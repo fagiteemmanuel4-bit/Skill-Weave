@@ -95,9 +95,10 @@
       var avatars=repo.contributors&&repo.contributors.length?repo.contributors.slice(0,3).map(function(c){return '<img src="'+escapeHTML(c.avatar_url)+'" alt="" loading="lazy" referrerpolicy="no-referrer">';}).join(""):(avatar?'<img src="'+escapeHTML(avatar)+'" alt="" loading="lazy" referrerpolicy="no-referrer">':'');
       var row=document.createElement("div");
       row.className="skill-row";
-      row.innerHTML='<div class="skill-main"><span class="skill-rank">'+String(i+1).padStart(2,"0")+'</span><span class="skill-symbol">'+icons[i%icons.length]+'</span><div class="skill-copy"><h3 class="skill-name"><a href="'+url+'">'+escapeHTML(name)+'</a></h3><p class="skill-description">'+escapeHTML(description)+'</p><a class="skill-repo" href="https://github.com/'+escapeHTML(repoName)+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(repoName+(repo.path?" · "+repo.path:""))+'</a></div></div><div class="skill-signals"><div class="signal-line"><span class="star-count"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/></svg>'+numberFmt(stars)+' stars</span><span class="avatar-stack" aria-label="Repository owner or contributors">'+avatars+'</span></div>'+wave(i+1,score)+'</div><div class="weekly-count">—<span>Weekly runs not tracked</span></div><a class="row-arrow" href="'+url+'" aria-label="View '+escapeHTML(name)+'">↗</a>';
+      row.innerHTML='<div class="skill-main"><span class="skill-rank">'+String(i+1).padStart(2,"0")+'</span><span class="skill-symbol">'+icons[i%icons.length]+'</span><div class="skill-copy"><h3 class="skill-name"><a href="'+url+'">'+escapeHTML(name)+'</a></h3><p class="skill-description">'+escapeHTML(description)+'</p><a class="skill-repo" href="https://github.com/'+escapeHTML(repoName)+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(repoName+(repo.path?" · "+repo.path:""))+'</a></div></div><div class="skill-signals"><div class="signal-line"><span class="star-count"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/></svg>'+numberFmt(stars)+' repo stars</span><span class="avatar-stack" aria-label="Repository owner or contributors">'+avatars+'</span></div>'+wave(i+1,score)+'</div><div class="weekly-count">—<span>Weekly runs not tracked</span></div><a class="row-arrow" href="'+url+'" aria-label="View '+escapeHTML(name)+'">↗</a>';
       root.appendChild(row);
     });
+    var statusLine=document.createElement("div");statusLine.className="leaderboard-status";statusLine.id="leaderboard-status";root.appendChild(statusLine);
   }
   async function loadSkills(){
     var status=document.getElementById("leaderboard-status");
@@ -122,6 +123,7 @@
       var rows=items.filter(Boolean).slice(0,5);
       if(!rows.length)throw new Error("No skill files were returned.");
       renderRows(rows);
+      status=document.getElementById("leaderboard-status");
       if(skillCount)skillCount.textContent=numberFmt(rows.length)+" shown";
       var note=document.getElementById("stats-note");
       if(note)note.textContent="Showing "+rows.length+" verified SKILL.md files from one public collection. Explore the library for broader GitHub search.";
@@ -129,6 +131,7 @@
     }catch(error){
       var rows=fallbackRows();
       renderRows(rows);
+      status=document.getElementById("leaderboard-status");
       if(skillCount)skillCount.textContent="3 shown";
       if(status)status.textContent="Live GitHub metadata is unavailable right now. These links point to known skill paths; verify the source before use.";
     }
