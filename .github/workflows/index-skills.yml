@@ -1,6 +1,11 @@
 name: Build SkillWeave catalogue
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/build-index.cjs"
+      - ".github/workflows/index-skills.yml"
   schedule:
     - cron: "20 4 * * *"
   workflow_dispatch:
