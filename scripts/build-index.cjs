@@ -15,20 +15,30 @@ const unique = new Map();
 let requests = 0;
 async function search(query, page) {
   const url = "https://api.github.com/search/code?q=" + encodeURIComponent(query + " filename:SKILL.md") + "&per_page=100&page=" + page;
-  const response = await fetch(url, {headers:{
-    "Accept":"application/vnd.github+json",
-    "Authorization":"Bearer " + token,
-    "X-GitHub-Api-Version":"2022-11-28",
-    "User-Agent":"SkillWeave-Catalog-Indexer"
-  }});
-  requests++;
-  if (response.status === 403 || response.status === 429) {
-    const retry = Number(response.headers.get("retry-after") || 60);
-    const body = await response.text();
-    throw new Error("GitHub search rate limit or access error after " + requests + " requests. Retry-After=" + retry + ". Response: " + body.slice(0, 400));
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const response = await fetch(url, {headers:{
+      "Accept":"application/vnd.github+json",
+      "Authorization":"Bearer " + token,
+      "X-GitHub-Api-Version":"2022-11-28",
+      "User-Agent":"SkillWeave-Catalog-Indexer"
+    }});
+    requests++;
+    if (response.status === 403 || response.status === 429) {
+      const retryHeader = Number(response.headers.get("retry-after") || 0);
+      const body = await response.text();
+      const messageMatch = body.match(/try again in ([0-9.]+)s/i);
+      const waitSeconds = Math.max(retryHeader, messageMatch ? Math.ceil(Number(messageMatch[1])) : 60);
+      if (attempt < 3 && waitSeconds <= 900) {
+        console.warn("GitHub search throttled this request. Waiting", waitSeconds, "seconds before retry", attempt + 2, "of 4.");
+        await sleep((waitSeconds + 2) * 1000);
+        continue;
+      }
+      throw new Error("GitHub search rate limit or access error after " + requests + " requests. Retry-After=" + waitSeconds + ". Response: " + body.slice(0, 400));
+    }
+    if (!response.ok) throw new Error("GitHub code search failed (" + response.status + "): " + (await response.text()).slice(0, 400));
+    return response.json();
   }
-  if (!response.ok) throw new Error("GitHub code search failed (" + response.status + "): " + (await response.text()).slice(0, 400));
-  return response.json();
+  throw new Error("GitHub search exhausted retries.");
 }
 function toEntry(item) {
   const r = item.repository || {};
