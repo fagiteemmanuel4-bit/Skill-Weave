@@ -1,6 +1,18 @@
 name: Test and deploy SkillWeave
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "library.html"
+      - "skill.html"
+      - "download.html"
+      - "app.js"
+      - "styles.css"
+      - "catalog.json"
+      - "scripts/**"
+      - ".github/workflows/deploy-pages.yml"
   push:
     branches: [main]
     paths:
@@ -10,6 +22,7 @@ on:
       - "download.html"
       - "app.js"
       - "styles.css"
+      - "catalog.json"
       - "scripts/**"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
@@ -33,10 +46,11 @@ jobs:
         run: node scripts/smoke-test.cjs
 
   deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: test
     environment:
       name: github-pages
-      url: \${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -46,7 +60,7 @@ jobs:
       - name: Prepare public site files
         run: |
           mkdir -p _site
-          cp index.html library.html skill.html download.html app.js styles.css _site/
+          cp index.html library.html skill.html download.html app.js styles.css catalog.json _site/
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
