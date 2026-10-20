@@ -1,10 +1,30 @@
-name: Deploy SkillWeave site
+name: Test and deploy SkillWeave
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "library.html"
+      - "skill.html"
+      - "download.html"
+      - "app.js"
+      - "styles.css"
+      - "catalog.json"
+      - "scripts/**"
+      - ".github/workflows/deploy-pages.yml"
+      - ".github/workflows/index-skills.yml"
   push:
     branches: [main]
     paths:
       - "index.html"
+      - "library.html"
+      - "skill.html"
+      - "download.html"
+      - "app.js"
+      - "styles.css"
+      - "catalog.json"
+      - "scripts/**"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
@@ -14,11 +34,27 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "github-pages"
+  group: github-pages
   cancel-in-progress: true
 
 jobs:
+  test:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check JavaScript syntax and site structure
+        run: node scripts/smoke-test.cjs
+
   deploy:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: test
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -31,11 +67,11 @@ jobs:
       - name: Prepare public site files
         run: |
           mkdir -p _site
-          cp index.html _site/index.html
+          cp index.html library.html skill.html download.html app.js styles.css catalog.json _site/
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "_site"
+          path: _site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
