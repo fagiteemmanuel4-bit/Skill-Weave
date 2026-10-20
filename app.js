@@ -14,6 +14,9 @@
   var currentSkillPath = "";
   var currentSkillText = "";
   var catalogData = null;
+  var currentFavoritesOnly = false;
+  var currentExcludeArchived = true;
+  var currentResults = [];
   var page = document.body.getAttribute("data-page") || "library";
   function $(id) { return document.getElementById(id); }
   function escapeHTML(value) {
@@ -118,11 +121,72 @@
     var getLink = downloadURL(repo, skillPath);
     var desc = repo.description || (skillPath ? "Indexed public SKILL.md file at " + skillPath + ". Open the source and review the instructions before using it." : "No repository description provided. Inspect its files before installing.");
     var topics = (repo.topics || []).slice(0, 2).map(function (topic) { return '<span class="chip">' + escapeHTML(topic) + '</span>'; }).join("");
+    var favoriteId = repo.id || repo.full_name + ":" + skillPath;
+    var saved = isFavorite(favoriteId);
     return '<article class="skill-card">' +
       '<div class="card-top"><span class="avatar">' + escapeHTML(initials(title)) + '</span><div style="min-width:0"><h3 class="card-title"><a href="' + detailLink + '">' + escapeHTML(title) + '</a></h3><div class="card-source">' + escapeHTML(subtitle) + '</div></div></div>' +
       '<p class="card-desc">' + escapeHTML(desc) + '</p>' +
       '<div class="chips"><span class="chip">' + escapeHTML(lang) + '</span><span class="chip">' + escapeHTML(lic) + '</span>' + topics + (repo.archived ? '<span class="chip warn">Archived</span>' : "") + '</div>' +
-      '<div class="card-foot"><div class="metric">★ ' + number(repo.stargazers_count) + ' · Updated ' + escapeHTML(timeAgo(repo.pushed_at)) + '<br><span class="score">Signal score ' + score + '/100</span></div><div class="card-actions"><a class="btn btn-small" href="' + detailLink + '">Inspect</a><a class="btn btn-small btn-primary" href="' + getLink + '">Get skill</a></div></div></article>';
+      '<div class="card-foot"><div class="metric">★ ' + number(repo.stargazers_count) + ' · Updated ' + escapeHTML(timeAgo(repo.pushed_at)) + '<br><span class="score">Signal score ' + score + '/100</span></div><div class="card-actions"><button class="btn btn-small" type="button" data-favorite-id="' + escapeHTML(favoriteId) + '" aria-pressed="' + String(saved) + '">' + (saved ? "★ Saved" : "☆ Save") + '</button><a class="btn btn-small" href="' + detailLink + '">Inspect</a><a class="btn btn-small btn-primary" href="' + getLink + '">Get skill</a></div></div></article>';
+  }
+  function getFavorites() {
+    try {
+      var value = JSON.parse(localStorage.getItem("sw:favorites") || "[]");
+      return Array.isArray(value) ? value : [];
+    } catch (e) { return []; }
+  }
+  function isFavorite(id) {
+    return getFavorites().indexOf(id) !== -1;
+  }
+  function toggleFavorite(id) {
+    var items = getFavorites();
+    var index = items.indexOf(id);
+    if (index === -1) items.push(id); else items.splice(index, 1);
+    try { localStorage.setItem("sw:favorites", JSON.stringify(items)); } catch (e) {}
+    return index === -1;
+  }
+  function wireFavoriteButtons(target) {
+    target.querySelectorAll("[data-favorite-id]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var id = button.getAttribute("data-favorite-id");
+        var saved = toggleFavorite(id);
+        button.setAttribute("aria-pressed", String(saved));
+        button.textContent = saved ? "★ Saved" : "☆ Save";
+        if (currentFavoritesOnly) searchRepos(true);
+      });
+    });
+  }
+  function exportResults() {
+    var rows = currentResults || [];
+    if (!rows.length) {
+      var button = $("export-results");
+      if (button) { button.textContent = "No results"; setTimeout(function () { button.textContent = "Export results"; }, 1500); }
+      return;
+    }
+    var data = rows.map(function (item) {
+      return {
+        name:item.skill_name || item.name || "",
+        repository:item.full_name || "",
+        path:item.skill_path || item.path || "",
+        stars:Number(item.stargazers_count || 0),
+        forks:Number(item.forks_count || 0),
+        language:item.language || "",
+        license:item.license && item.license.spdx_id || "",
+        updatedAt:item.pushed_at || "",
+        sourceUrl:item.html_url || ""
+      };
+    });
+    var csv = ["name,repository,path,stars,forks,language,license,updatedAt,sourceUrl"].concat(data.map(function (row) {
+      return [row.name,row.repository,row.path,row.stars,row.forks,row.language,row.license,row.updatedAt,row.sourceUrl].map(function (value) {
+        return '"' + String(value == null ? "" : value).replace(/"/g, '""') + '"';
+      }).join(",");
+    })).join("\n");
+    var blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+    var url = URL.createObjectURL(blob);
+    var anchor = document.createElement("a");
+    anchor.href = url; anchor.download = "skillweave-search-results.csv";
+    document.body.appendChild(anchor); anchor.click(); anchor.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
   function renderError(target, message) {
     if (!target) return;
@@ -141,6 +205,7 @@
     bits.push("in:readme");
     if (currentLanguage) bits.push("language:" + currentLanguage);
     if (currentMinStars > 0) bits.push("stars:>=" + currentMinStars);
+    if (currentExcludeArchived) bits.push("archived:false");
     return bits.join(" ");
   }
   async function loadCatalog() {
@@ -171,10 +236,13 @@
       if (query && text.indexOf(query) === -1) return false;
       if (currentLanguage && String(skill.language || "").toLowerCase() !== currentLanguage.toLowerCase()) return false;
       if (Number(skill.stargazers_count || 0) < currentMinStars) return false;
+      if (currentExcludeArchived && skill.archived) return false;
+      if (currentFavoritesOnly && !isFavorite(skill.id || skill.full_name + ":" + (skill.skill_path || skill.path || ""))) return false;
       return true;
     });
     items.sort(function (a, b) {
       if (currentSort === "updated") return new Date(b.pushed_at || 0) - new Date(a.pushed_at || 0);
+      if (currentSort === "forks") return Number(b.forks_count || 0) - Number(a.forks_count || 0);
       return Number(b.stargazers_count || 0) - Number(a.stargazers_count || 0);
     });
     return items;
@@ -190,6 +258,7 @@
       var catalog = await loadCatalog();
       if (catalog) {
         var filtered = searchCatalogSkills(catalog);
+        currentResults = filtered;
         var total = filtered.length;
         var start = (currentPage - 1) * 20;
         var items = filtered.slice(start, start + 20);
@@ -203,6 +272,7 @@
           target.innerHTML = '<div class="empty"><h3>No indexed skills found</h3>Try another phrase or a broader query. You can also search GitHub directly below.</div><div style="margin-top:12px"><a class="btn btn-primary" href="https://github.com/search?q=' + encodeURIComponent((currentQuery || "SKILL.md") + " filename:SKILL.md&type=code") + '" target="_blank" rel="noopener noreferrer">Search GitHub code ↗</a></div>';
         } else {
           target.innerHTML = items.map(card).join("");
+          wireFavoriteButtons(target);
         }
         if ($("data-note")) {
           var date = catalog.generatedAt ? dateLabel(catalog.generatedAt) : "unknown date";
@@ -215,7 +285,13 @@
       var url = API + "/search/repositories?q=" + encodeURIComponent(q) + "&sort=" + encodeURIComponent(currentSort) + "&order=desc&per_page=20&page=" + currentPage;
       var result = await getJSON(url, key);
       var repos = result.items || [];
-      if ($("result-count")) $("result-count").textContent = number(result.total_count) + " GitHub repositories match this query";
+      repos = repos.filter(function (item) {
+        if (currentExcludeArchived && item.archived) return false;
+        if (currentFavoritesOnly && !isFavorite(item.full_name + ":" + (item.skill_path || item.path || ""))) return false;
+        return true;
+      });
+      currentResults = repos;
+      if ($("result-count")) $("result-count").textContent = number(currentFavoritesOnly ? repos.length : result.total_count) + " GitHub repositories match this query";
       if ($("page-count")) $("page-count").textContent = "Page " + currentPage + " · 20 repositories per page";
       if ($("page-count-bottom")) $("page-count-bottom").textContent = "Page " + currentPage;
       if ($("previous-page")) $("previous-page").disabled = currentPage <= 1;
@@ -226,6 +302,7 @@
         return;
       }
       target.innerHTML = repos.map(card).join("");
+      wireFavoriteButtons(target);
       if ($("data-note")) $("data-note").textContent = "Fallback: live GitHub repository search. A repository result is not proof that every skill file exists; inspect its files before installing.";
     } catch (error) {
       if (error.name === "AbortError") return;
@@ -239,6 +316,17 @@
     var params = new URLSearchParams(location.search);
     input.value = params.get("q") || "";
     currentQuery = input.value;
+    currentSort = params.get("sort") || "stars";
+    currentLanguage = params.get("language") || "";
+    currentMinStars = Number(params.get("stars") || 0);
+    currentExcludeArchived = params.get("archived") !== "all";
+    currentFavoritesOnly = params.get("saved") === "1";
+    $("sort-select").value = currentSort;
+    $("language-select").value = currentLanguage;
+    $("stars-select").value = String(currentMinStars);
+    $("exclude-archived").checked = currentExcludeArchived;
+    $("favorites-toggle").setAttribute("aria-pressed", String(currentFavoritesOnly));
+    $("favorites-toggle").textContent = currentFavoritesOnly ? "★ Saved only" : "☆ Saved only";
     var timer;
     input.addEventListener("input", function () {
       clearTimeout(timer);
@@ -258,6 +346,18 @@
     $("sort-select").addEventListener("change", function () { currentSort = this.value; searchRepos(true); });
     $("language-select").addEventListener("change", function () { currentLanguage = this.value; searchRepos(true); });
     $("stars-select").addEventListener("change", function () { currentMinStars = Number(this.value || 0); searchRepos(true); });
+    $("exclude-archived").addEventListener("change", function () { currentExcludeArchived = this.checked; searchRepos(true); });
+    $("favorites-toggle").addEventListener("click", function () { currentFavoritesOnly = !currentFavoritesOnly; this.setAttribute("aria-pressed", String(currentFavoritesOnly)); this.textContent = currentFavoritesOnly ? "★ Saved only" : "☆ Saved only"; searchRepos(true); });
+    $("export-results").addEventListener("click", exportResults);
+    $("copy-search-link").addEventListener("click", function () {
+      var url = new URL(location.href);
+      if (currentQuery) url.searchParams.set("q", currentQuery); else url.searchParams.delete("q");
+      url.searchParams.set("sort", currentSort);
+      if (currentLanguage) url.searchParams.set("language", currentLanguage); else url.searchParams.delete("language");
+      if (currentMinStars) url.searchParams.set("stars", String(currentMinStars)); else url.searchParams.delete("stars");
+      if (currentExcludeArchived) url.searchParams.delete("archived"); else url.searchParams.set("archived", "all");
+      copyText(url.toString(), this);
+    });
     $("previous-page").addEventListener("click", function () { if (currentPage > 1) { currentPage--; searchRepos(false); window.scrollTo({top:260,behavior:"smooth"}); } });
     $("next-page").addEventListener("click", function () { currentPage++; searchRepos(false); window.scrollTo({top:260,behavior:"smooth"}); });
     document.querySelectorAll("[data-preset]").forEach(function (button) {
@@ -295,6 +395,20 @@
       return a.path.localeCompare(b.path);
     });
   }
+  function securityReviewHTML(text, path) {
+    var source = String(text || "");
+    var checks = [
+      {label:"Remote shell pipeline",pattern:/\b(curl|wget)\b[^\n|]{0,240}\|\s*(ba)?sh\b/i,level:"high",description:"May download remote content and pipe it directly to a shell."},
+      {label:"Privileged or destructive command",pattern:/\b(sudo|rm\s+-rf|chmod\s+777)\b/i,level:"high",description:"Contains a privileged or potentially destructive command pattern."},
+      {label:"Dynamic execution",pattern:/\b(eval\s*\(|exec\s*\(|child_process|subprocess\.run)\b/i,level:"review",description:"May evaluate code or start subprocesses; inspect the surrounding instructions."},
+      {label:"Secrets or environment access",pattern:/\b(process\.env|GITHUB_TOKEN|OPENAI_API_KEY|AWS_SECRET_ACCESS_KEY|\.env)\b/i,level:"review",description:"Mentions environment variables or common secret locations."},
+      {label:"Network access",pattern:/\b(fetch\s*\(|axios\.|requests\.get|curl\s+https?:)/i,level:"review",description:"Contains a network-access pattern; verify the destination and data being sent."}
+    ];
+    var found = checks.filter(function (check) { return check.pattern.test(source); });
+    return '<section class="panel" style="margin-top:14px"><h2>Heuristic safety review</h2><p class="small muted">Basic text-pattern checks for ' + escapeHTML(path || "the selected file") + '. These are review prompts, not a security audit; matches can be false positives and missing matches do not prove safety.</p>' +
+      (found.length ? '<div class="trust-list">' + found.map(function (check) { return '<div class="trust-row"><span><strong>' + escapeHTML(check.label) + '</strong><br><span class="small">' + escapeHTML(check.description) + '</span></span><span class="chip ' + (check.level === "high" ? "warn" : "") + '">' + (check.level === "high" ? "HIGH REVIEW" : "REVIEW") + '</span></div>'; }).join("") + '</div>' : '<div class="notice" style="margin-top:10px">No patterns from this small rule set were detected. This is not evidence that the skill is safe.</div>') +
+      '</section>';
+  }
   function repoScoreHTML(repo) {
     var score = rating(repo);
     return '<div class="panel"><h2>Public signal score</h2><div class="score-ring">' + score + '/100</div><p class="small muted">' + escapeHTML(signalLabel(score)) + '. This is a transparent metadata heuristic, not a user rating, quality guarantee, or security certification.</p><div class="trust-list"><div class="trust-row"><span>GitHub stars</span><b class="trust-value">' + number(repo.stargazers_count) + '</b></div><div class="trust-row"><span>Last pushed</span><b class="trust-value">' + escapeHTML(dateLabel(repo.pushed_at)) + '</b></div><div class="trust-row"><span>License</span><b class="trust-value">' + escapeHTML(repo.license && repo.license.spdx_id || "Not verified") + '</b></div><div class="trust-row"><span>Archived</span><b class="trust-value">' + (repo.archived ? "Yes" : "No") + '</b></div><div class="trust-row"><span>Open issues</span><b class="trust-value">' + number(repo.open_issues_count) + '</b></div></div><hr style="border:0;border-top:1px solid #eff1f5;margin:15px 0"><p class="small muted">Score ingredients: stars (capped contribution), license metadata, description, topics, recent activity, and archive status. Popularity is not the same as quality.</p></div>';
@@ -326,7 +440,7 @@
         '<section class="detail-hero"><div class="detail-title-row"><span class="avatar">' + escapeHTML(initials(repo.name)) + '</span><div style="min-width:0"><h1 class="detail-title">' + escapeHTML(repo.name) + '</h1><div class="card-source">' + escapeHTML(repo.full_name) + '</div><div class="chips" style="margin-top:10px">' + chips + '</div></div></div><p class="detail-desc">' + escapeHTML(repo.description || "No description supplied by this repository.") + '</p><div class="hero-cta"><a class="btn btn-primary" href="' + downloadURL(repo, currentSkillPath) + '">Download / install</a><a class="btn" href="' + repo.html_url + '" target="_blank" rel="noopener noreferrer">Open GitHub ↗</a><button class="btn" id="copy-repo" type="button">Copy repository URL</button></div><div class="stat-grid"><div class="stat"><strong>' + number(repo.stargazers_count) + '</strong><span>GitHub stars</span></div><div class="stat"><strong>' + number(repo.forks_count) + '</strong><span>Forks</span></div><div class="stat"><strong>' + escapeHTML(timeAgo(repo.pushed_at)) + '</strong><span>Last activity</span></div></div></section>' +
         '<div class="detail-grid"><div class="panel"><h2>Skill instructions & repository files</h2><p class="small muted">SkillWeave reads public files from the repository’s default branch. Review instructions before using them with an AI agent.</p>' +
         (skills.length ? '<label for="skill-file" class="small"><strong>Detected SKILL.md files (' + skills.length + ')</strong></label><select id="skill-file" style="display:block;width:100%;margin:8px 0 15px;padding:10px;border:1px solid var(--line);border-radius:9px">' + skillOptions + '</select>' : '<div class="notice">No file named SKILL.md was found in this repository’s default branch. The preview below uses its README when available. This result is a repository candidate, not a verified skill.</div>') +
-        '<div id="file-preview" class="markdown-preview">' + escapeHTML(fileText || "No readable SKILL.md or README was found.") + '</div><div class="hero-cta"><button class="btn" id="copy-file" type="button">Copy file contents</button><a class="btn btn-primary" href="' + downloadURL(repo, currentSkillPath) + '">Download options</a></div>' +
+        '<div id="file-preview" class="markdown-preview">' + escapeHTML(fileText || "No readable SKILL.md or README was found.") + '</div>' + securityReviewHTML(fileText, previewPath) + '<div class="hero-cta"><button class="btn" id="copy-file" type="button">Copy file contents</button><a class="btn btn-primary" href="' + downloadURL(repo, currentSkillPath) + '">Download options</a></div>' +
         '<h3>Detected files</h3><ul class="file-list">' + (tree.filter(function (f) { return /(^|\/)(skill\.md|readme\.md|license|license\.md|agents\.md|package\.json)$/i.test(f.path); }).slice(0, 20).map(function (f) { return '<li><code>' + escapeHTML(f.path) + '</code><a class="link" href="' + skillURL(repo, f.path) + '">Preview</a></li>'; }).join("") || '<li>No common documentation files found.</li>') + '</ul></div>' + repoScoreHTML(repo) + '</div>';
       var selector = $("skill-file");
       if (selector) selector.addEventListener("change", function () { location.href = skillURL(repo, this.value); });

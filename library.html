@@ -24,9 +24,13 @@
       <form id="search-form">
         <div class="searchline"><div class="searchbox"><input id="search-input" type="search" placeholder="Search skills, e.g. react, testing, agents…" autocomplete="off" aria-label="Search GitHub repositories"></div><button class="btn btn-primary" type="submit">Search GitHub</button></div>
         <div class="filters">
-          <select id="sort-select" aria-label="Sort results"><option value="stars">Sort: Most stars</option><option value="updated">Sort: Recently updated</option><option value="help-wanted-issues">Sort: Help wanted</option></select>
+          <select id="sort-select" aria-label="Sort results"><option value="stars">Sort: Most stars</option><option value="updated">Sort: Recently updated</option><option value="forks">Sort: Most forks</option></select>
           <select id="language-select" aria-label="Filter language"><option value="">Any language</option><option>TypeScript</option><option>JavaScript</option><option>Python</option><option>Markdown</option><option>Shell</option><option>Go</option><option>Rust</option></select>
           <select id="stars-select" aria-label="Minimum GitHub stars"><option value="0">Any star count</option><option value="10">10+ stars</option><option value="50">50+ stars</option><option value="100">100+ stars</option><option value="500">500+ stars</option></select>
+          <label class="btn btn-small" style="gap:6px"><input id="exclude-archived" type="checkbox" checked style="margin:0"> Hide archived</label>
+          <button class="btn btn-small" id="favorites-toggle" type="button" aria-pressed="false">☆ Saved only</button>
+          <button class="btn btn-small" id="copy-search-link" type="button">Copy search link</button>
+          <button class="btn btn-small" id="export-results" type="button">Export results</button>
           <button class="btn btn-small" type="button" data-preset="agent skills">Agent skills</button>
           <button class="btn btn-small" type="button" data-preset="claude code">Claude Code</button>
           <button class="btn btn-small" type="button" data-preset="prompt engineering">Prompt engineering</button>
