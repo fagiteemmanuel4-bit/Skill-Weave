@@ -1,10 +1,16 @@
-name: Deploy SkillWeave site
+name: Test and deploy SkillWeave
 
 on:
   push:
     branches: [main]
     paths:
       - "index.html"
+      - "library.html"
+      - "skill.html"
+      - "download.html"
+      - "app.js"
+      - "styles.css"
+      - "scripts/**"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
@@ -14,14 +20,23 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "github-pages"
+  group: github-pages
   cancel-in-progress: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check JavaScript syntax and site structure
+        run: node scripts/smoke-test.cjs
+
   deploy:
+    needs: test
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: \${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,11 +46,11 @@ jobs:
       - name: Prepare public site files
         run: |
           mkdir -p _site
-          cp index.html _site/index.html
+          cp index.html library.html skill.html download.html app.js styles.css _site/
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "_site"
+          path: _site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
