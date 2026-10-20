@@ -406,7 +406,7 @@
     ];
     var found = checks.filter(function (check) { return check.pattern.test(source); });
     return '<section class="panel" style="margin-top:14px"><h2>Heuristic safety review</h2><p class="small muted">Basic text-pattern checks for ' + escapeHTML(path || "the selected file") + '. These are review prompts, not a security audit; matches can be false positives and missing matches do not prove safety.</p>' +
-      (found.length ? '<div class="trust-list">' + found.map(function (check) { return '<div class="trust-row"><span><strong>' + escapeHTML(check.label) + '</strong><br><span class="small">' + escapeHTML(check.description) + '</span></span><span class="chip ' + (check.level === "high" ? "warn" : "") + '">' + (check.level === "high" ? "HIGH REVIEW" : "REVIEW") + '</span></div>'; }).join("") + '</div>' : '<div class="notice" style="margin-top:10px">No patterns from this small rule set were detected. This is not evidence that the skill is safe.</div>') +
+      (found.length ? '<div class="trust-list">' + found.map(function (check) { return '<div class="trust-row"><span><strong>' + escapeHTML(check.label) + '</strong><br><span class="small">' + escapeHTML(check.description) + '</span></span><span class="chip ' + (check.level === "high" ? "warn" : "") + '">' + (check.level === "high" ? "High review" : "Review") + '</span></div>'; }).join("") + '</div>' : '<div class="notice" style="margin-top:10px">No patterns from this small rule set were detected. This is not evidence that the skill is safe.</div>') +
       '</section>';
   }
   function repoScoreHTML(repo) {
