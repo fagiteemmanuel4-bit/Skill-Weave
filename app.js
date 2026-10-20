@@ -13,6 +13,7 @@
   var currentTree = [];
   var currentSkillPath = "";
   var currentSkillText = "";
+  var catalogData = null;
   var page = document.body.getAttribute("data-page") || "library";
   function $(id) { return document.getElementById(id); }
   function escapeHTML(value) {
@@ -110,12 +111,18 @@
     var score = rating(repo);
     var lang = repo.language || "Not specified";
     var lic = repo.license && repo.license.spdx_id && repo.license.spdx_id !== "NOASSERTION" ? repo.license.spdx_id : "License unverified";
+    var skillPath = repo.skill_path || repo.path || "";
+    var title = repo.skill_name || repo.name || skillPath.split("/").slice(-2, -1)[0] || repo.full_name;
+    var subtitle = repo.full_name + (skillPath ? " · " + skillPath : "");
+    var detailLink = skillURL(repo, skillPath);
+    var getLink = downloadURL(repo, skillPath);
+    var desc = repo.description || (skillPath ? "Indexed public SKILL.md file at " + skillPath + ". Open the source and review the instructions before using it." : "No repository description provided. Inspect its files before installing.");
     var topics = (repo.topics || []).slice(0, 2).map(function (topic) { return '<span class="chip">' + escapeHTML(topic) + '</span>'; }).join("");
     return '<article class="skill-card">' +
-      '<div class="card-top"><span class="avatar">' + escapeHTML(initials(repo.name)) + '</span><div style="min-width:0"><h3 class="card-title"><a href="' + skillURL(repo) + '">' + escapeHTML(repo.name) + '</a></h3><div class="card-source">' + escapeHTML(repo.full_name) + '</div></div></div>' +
-      '<p class="card-desc">' + escapeHTML(repo.description || "No repository description provided. Open the source to inspect its skill files and instructions.") + '</p>' +
+      '<div class="card-top"><span class="avatar">' + escapeHTML(initials(title)) + '</span><div style="min-width:0"><h3 class="card-title"><a href="' + detailLink + '">' + escapeHTML(title) + '</a></h3><div class="card-source">' + escapeHTML(subtitle) + '</div></div></div>' +
+      '<p class="card-desc">' + escapeHTML(desc) + '</p>' +
       '<div class="chips"><span class="chip">' + escapeHTML(lang) + '</span><span class="chip">' + escapeHTML(lic) + '</span>' + topics + (repo.archived ? '<span class="chip warn">Archived</span>' : "") + '</div>' +
-      '<div class="card-foot"><div class="metric">★ ' + number(repo.stargazers_count) + ' · Updated ' + escapeHTML(timeAgo(repo.pushed_at)) + '<br><span class="score">Signal score ' + score + '/100</span></div><div class="card-actions"><a class="btn btn-small" href="' + skillURL(repo) + '">Inspect</a><a class="btn btn-small btn-primary" href="' + downloadURL(repo) + '">Get skill</a></div></div></article>';
+      '<div class="card-foot"><div class="metric">★ ' + number(repo.stargazers_count) + ' · Updated ' + escapeHTML(timeAgo(repo.pushed_at)) + '<br><span class="score">Signal score ' + score + '/100</span></div><div class="card-actions"><a class="btn btn-small" href="' + detailLink + '">Inspect</a><a class="btn btn-small btn-primary" href="' + getLink + '">Get skill</a></div></div></article>';
   }
   function renderError(target, message) {
     if (!target) return;
@@ -136,6 +143,42 @@
     if (currentMinStars > 0) bits.push("stars:>=" + currentMinStars);
     return bits.join(" ");
   }
+  async function loadCatalog() {
+    if (catalogData) return catalogData;
+    try {
+      var cached = readCache("catalog:v1");
+      if (cached && cached.skills && cached.skills.length) {
+        catalogData = cached;
+        return catalogData;
+      }
+      var response = await fetch("catalog.json", {cache:"no-cache"});
+      if (!response.ok) return null;
+      var data = await response.json();
+      if (data && Array.isArray(data.skills) && data.skills.length) {
+        catalogData = data;
+        writeCache("catalog:v1", data);
+        return catalogData;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+  function searchCatalogSkills(data) {
+    var query = currentQuery.trim().toLowerCase();
+    var items = data.skills.filter(function (skill) {
+      var text = [skill.name, skill.full_name, skill.description, skill.path, skill.owner].join(" ").toLowerCase();
+      if (query && text.indexOf(query) === -1) return false;
+      if (currentLanguage && String(skill.language || "").toLowerCase() !== currentLanguage.toLowerCase()) return false;
+      if (Number(skill.stargazers_count || 0) < currentMinStars) return false;
+      return true;
+    });
+    items.sort(function (a, b) {
+      if (currentSort === "updated") return new Date(b.pushed_at || 0) - new Date(a.pushed_at || 0);
+      return Number(b.stargazers_count || 0) - Number(a.stargazers_count || 0);
+    });
+    return items;
+  }
   async function searchRepos(reset) {
     var target = $("results");
     if (!target) return;
@@ -143,27 +186,51 @@
     if (activeController) activeController.abort();
     activeController = new AbortController();
     setLoading(target, 4);
-    var q = buildQuery();
-    var key = "search:" + q + ":" + currentSort + ":" + currentPage;
-    var url = API + "/search/repositories?q=" + encodeURIComponent(q) + "&sort=" + encodeURIComponent(currentSort) + "&order=desc&per_page=20&page=" + currentPage;
     try {
+      var catalog = await loadCatalog();
+      if (catalog) {
+        var filtered = searchCatalogSkills(catalog);
+        var total = filtered.length;
+        var start = (currentPage - 1) * 20;
+        var items = filtered.slice(start, start + 20);
+        if ($("result-count")) $("result-count").textContent = number(total) + " indexed skills";
+        if ($("page-count")) $("page-count").textContent = "Page " + currentPage + " · 20 skills per page";
+        if ($("page-count-bottom")) $("page-count-bottom").textContent = "Page " + currentPage + " of " + Math.max(1, Math.ceil(total / 20));
+        if ($("previous-page")) $("previous-page").disabled = currentPage <= 1;
+        if ($("next-page")) $("next-page").disabled = start + 20 >= total;
+        if ($("query-summary")) $("query-summary").textContent = currentQuery ? 'Indexed skills matching "' + currentQuery + '"' : "Indexed public SKILL.md files";
+        if (!items.length) {
+          target.innerHTML = '<div class="empty"><h3>No indexed skills found</h3>Try another phrase or a broader query. You can also search GitHub directly below.</div><div style="margin-top:12px"><a class="btn btn-primary" href="https://github.com/search?q=' + encodeURIComponent((currentQuery || "SKILL.md") + " filename:SKILL.md&type=code") + '" target="_blank" rel="noopener noreferrer">Search GitHub code ↗</a></div>';
+        } else {
+          target.innerHTML = items.map(card).join("");
+        }
+        if ($("data-note")) {
+          var date = catalog.generatedAt ? dateLabel(catalog.generatedAt) : "unknown date";
+          $("data-note").textContent = "Scheduled GitHub index · " + number(catalog.totalSkills || catalog.skills.length) + " SKILL.md paths · generated " + date + ". Coverage is not exhaustive; scores are metadata heuristics, not quality or security ratings.";
+        }
+        return;
+      }
+      var q = buildQuery();
+      var key = "search:" + q + ":" + currentSort + ":" + currentPage;
+      var url = API + "/search/repositories?q=" + encodeURIComponent(q) + "&sort=" + encodeURIComponent(currentSort) + "&order=desc&per_page=20&page=" + currentPage;
       var result = await getJSON(url, key);
-      var items = result.items || [];
+      var repos = result.items || [];
       if ($("result-count")) $("result-count").textContent = number(result.total_count) + " GitHub repositories match this query";
-      if ($("page-count")) $("page-count").textContent = "Page " + currentPage + " · 20 results per page";
+      if ($("page-count")) $("page-count").textContent = "Page " + currentPage + " · 20 repositories per page";
+      if ($("page-count-bottom")) $("page-count-bottom").textContent = "Page " + currentPage;
       if ($("previous-page")) $("previous-page").disabled = currentPage <= 1;
-      if ($("next-page")) $("next-page").disabled = items.length < 20 || currentPage * 20 >= Math.min(result.total_count || 0, 1000);
-      if ($("query-summary")) $("query-summary").textContent = currentQuery ? 'Search results for "' + currentQuery + '"' : "Repositories mentioning SKILL.md";
-      if (!items.length) {
+      if ($("next-page")) $("next-page").disabled = repos.length < 20 || currentPage * 20 >= Math.min(result.total_count || 0, 1000);
+      if ($("query-summary")) $("query-summary").textContent = currentQuery ? 'GitHub repository search for "' + currentQuery + '"' : "Repositories mentioning SKILL.md";
+      if (!repos.length) {
         target.innerHTML = '<div class="empty"><h3>No repositories found</h3>Try a broader query such as “agent skills”, “react”, or “claude”.</div>';
         return;
       }
-      target.innerHTML = items.map(card).join("");
-      if ($("data-note")) $("data-note").textContent = "Live GitHub repository search. A repository is not proof that every skill file exists; inspect its files before installing.";
+      target.innerHTML = repos.map(card).join("");
+      if ($("data-note")) $("data-note").textContent = "Fallback: live GitHub repository search. A repository result is not proof that every skill file exists; inspect its files before installing.";
     } catch (error) {
       if (error.name === "AbortError") return;
       renderError(target, error.message || "Network request failed. Check your connection.");
-      if ($("data-note")) $("data-note").textContent = "Live GitHub data is temporarily unavailable. Cached results may be available for recent searches.";
+      if ($("data-note")) $("data-note").textContent = "Live GitHub data is temporarily unavailable. Check your connection and try again.";
     }
   }
   function initLibrary() {
