@@ -15,7 +15,7 @@ const unique = new Map();
 let requests = 0;
 async function search(query, page) {
   const url = "https://api.github.com/search/code?q=" + encodeURIComponent(query + " filename:SKILL.md") + "&per_page=100&page=" + page;
-  for (let attempt = 0; attempt < 4; attempt++) {
+  for (let attempt = 0; attempt < 20; attempt++) {
     const response = await fetch(url, {headers:{
       "Accept":"application/vnd.github+json",
       "Authorization":"Bearer " + token,
@@ -26,10 +26,11 @@ async function search(query, page) {
     if (response.status === 403 || response.status === 429) {
       const retryHeader = Number(response.headers.get("retry-after") || 0);
       const body = await response.text();
-      const messageMatch = body.match(/try again in ([0-9.]+)s/i);
-      const waitSeconds = Math.max(retryHeader, messageMatch ? Math.ceil(Number(messageMatch[1])) : 60);
-      if (attempt < 3 && waitSeconds <= 900) {
-        console.warn("GitHub search throttled this request. Waiting", waitSeconds, "seconds before retry", attempt + 2, "of 4.");
+      const messageMatch = body.match(/try again in ([0-9.]+)\s*(ms|s)\b/i);
+      const messageWait = messageMatch ? (messageMatch[2].toLowerCase() === "ms" ? Number(messageMatch[1]) / 1000 : Number(messageMatch[1])) : 0;
+      const waitSeconds = Math.max(retryHeader, Math.ceil(messageWait), 2);
+      if (attempt < 19 && waitSeconds <= 1800) {
+        console.warn("GitHub search throttled this request. Waiting", waitSeconds, "seconds before retry", attempt + 2, "of 20.");
         await sleep((waitSeconds + 2) * 1000);
         continue;
       }
