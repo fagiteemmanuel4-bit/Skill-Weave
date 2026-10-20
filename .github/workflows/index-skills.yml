@@ -39,6 +39,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/build-index.cjs
+      - name: Rebase generated catalogue onto the latest main
+        run: |
+          git stash push -m "generated catalogue" -- catalog.json
+          git fetch origin main
+          git rebase origin/main
+          git stash pop
       - name: Commit catalogue if it changed
         run: |
           if git diff --quiet -- catalog.json; then
