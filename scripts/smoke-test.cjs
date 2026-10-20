@@ -15,6 +15,8 @@ for (const file of ["library.html", "skill.html", "download.html"]) {
   if (!html.includes('href="styles.css"')) throw new Error(file + " does not load styles.css");
   if (!html.includes('src="app.js"')) throw new Error(file + " does not load app.js");
 }
-const check = spawnSync(process.execPath, ["--check", path.join(root, "app.js")], { encoding: "utf8" });
-if (check.status !== 0) throw new Error(check.stderr || "JavaScript syntax check failed");
+for (const file of ["app.js", "scripts/build-index.cjs"]) {
+  const check = spawnSync(process.execPath, ["--check", path.join(root, file)], { encoding: "utf8" });
+  if (check.status !== 0) throw new Error(file + ": " + (check.stderr || "JavaScript syntax check failed"));
+}
 console.log("SkillWeave smoke tests passed: required pages/assets exist, app.js parses, and core library markers are present.");
