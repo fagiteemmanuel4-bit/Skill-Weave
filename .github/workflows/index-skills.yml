@@ -27,7 +27,7 @@ jobs:
           node-version: 20
       - name: Build public SKILL.md catalogue
         env:
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/build-index.cjs
       - name: Commit catalogue if it changed
         run: |
