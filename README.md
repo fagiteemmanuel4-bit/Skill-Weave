@@ -1,6 +1,6 @@
-# SkillWeave
+# SkillWave
 
-SkillWeave is an independent, source-first library for discovering public AI-agent skill files. It helps people search GitHub, inspect a repository's `SKILL.md` instructions, review visible repository signals, and download files without pretending that popularity is proof of quality.
+SkillWave is an independent, source-first library for discovering public AI-agent skill files. It helps people search GitHub, inspect a repository's `SKILL.md` instructions, review visible repository signals, and download files without pretending that popularity is proof of quality.
 
 ## Pages
 
@@ -8,7 +8,7 @@ SkillWeave is an independent, source-first library for discovering public AI-age
 - `library.html`: searchable skill catalogue with language/star/archive filters, sorting, pagination, local saved skills, shareable search URLs, and CSV export.
 - `skill.html?repo=OWNER/REPO`: repository detail page, file-tree inspection, and instruction preview.
 - `download.html?repo=OWNER/REPO`: download a selected instruction file, download a source ZIP, or copy a compatible CLI command.
-- `styles.css` and `app.js`: shared UI and client-side behaviour.
+- `styles.css` and `app.js`: shared UI and library behaviour. `universe.js` powers the homepage starfield, command palette, and public-skill preview.
 
 ## How search works
 
