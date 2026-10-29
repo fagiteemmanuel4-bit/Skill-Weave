@@ -32,7 +32,7 @@ const CARTOON_CHARACTERS: CharacterProfile[] = [
     name: 'Spark',
     role: 'The Energetic Inventor',
     color: '#026fc7',
-    bgColor: 'bg-brand-500/20 border-brand-500/40 text-brand-300',
+    bgColor: 'bg-brand-500/20 border-brand-500/50 text-brand-200',
     description: 'Always tinkering with high-voltage gadgetry and creating unexpected inventions.',
     emotions: {
       happy: '⚡😊',
@@ -45,7 +45,7 @@ const CARTOON_CHARACTERS: CharacterProfile[] = [
     name: 'Luna',
     role: 'The Stellar Navigator',
     color: '#a855f7',
-    bgColor: 'bg-purple-500/20 border-purple-500/40 text-purple-300',
+    bgColor: 'bg-purple-500/20 border-purple-500/50 text-purple-200',
     description: 'Charts constellations and maps secret cosmic shortcuts through the galaxy.',
     emotions: {
       happy: '🌙✨',
@@ -58,7 +58,7 @@ const CARTOON_CHARACTERS: CharacterProfile[] = [
     name: 'Orbit',
     role: 'The Gravity Artist',
     color: '#10b981',
-    bgColor: 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300',
+    bgColor: 'bg-emerald-500/20 border-emerald-500/50 text-emerald-200',
     description: 'Bends gravitational fields to sculpt floating kinetic art pieces.',
     emotions: {
       happy: '🌀🎨',
@@ -71,7 +71,7 @@ const CARTOON_CHARACTERS: CharacterProfile[] = [
     name: 'Pixel',
     role: 'The Retro Hacker',
     color: '#f59e0b',
-    bgColor: 'bg-amber-500/20 border-amber-500/40 text-amber-300',
+    bgColor: 'bg-amber-500/20 border-amber-500/50 text-amber-200',
     description: 'Decrypts ancient 8-bit arcade codes and transmutes them into futuristic beats.',
     emotions: {
       happy: '👾🎶',
@@ -111,20 +111,20 @@ export const SimulationView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-8 pb-12 animate-fadeIn">
 
       {/* Simulation Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-brand-950/40 to-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-4 shadow-xl">
+      <div className="bg-gradient-to-r from-slate-900 via-brand-950/50 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-5 shadow-card">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>PRD Section 17 Worked Example</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>PRD Worked Example Simulation</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white">
+            <h1 className="text-2xl sm:text-4xl font-black text-white">
               Cartoon Character Website Workflow Simulation
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
+            <p className="text-xs sm:text-sm text-slate-200 max-w-2xl font-normal">
               Watch how the 5-stage workflow bundle transforms a raw brief into a art-directed, accessible, tested React web app.
             </p>
           </div>
@@ -133,7 +133,7 @@ export const SimulationView: React.FC = () => {
             <button
               onClick={handleAutoRun}
               disabled={isAutoRunning}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-lg shadow-brand-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-brand transition-all flex items-center gap-2 disabled:opacity-50"
             >
               <Play className="w-4 h-4 fill-white" />
               <span>{isAutoRunning ? 'Simulating Stage Pipeline...' : 'Run Automated Simulation'}</span>
@@ -141,7 +141,7 @@ export const SimulationView: React.FC = () => {
 
             <button
               onClick={() => setActiveStep(1)}
-              className="p-2 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors border border-slate-700"
+              className="p-2.5 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors border border-slate-700"
               title="Reset to Stage 1"
             >
               <RotateCcw className="w-4 h-4" />
@@ -150,7 +150,7 @@ export const SimulationView: React.FC = () => {
         </div>
 
         {/* Workflow Progress Steps Nav */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-2">
           {[
             { step: 1, label: '1. Brief Analysis', icon: <Workflow className="w-3.5 h-3.5" /> },
             { step: 2, label: '2. Art Direction', icon: <Palette className="w-3.5 h-3.5" /> },
@@ -166,10 +166,10 @@ export const SimulationView: React.FC = () => {
                 onClick={() => setActiveStep(item.step)}
                 className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
                   isCurrent
-                    ? 'bg-brand-600/20 border-brand-500 text-white shadow-md shadow-brand-500/10'
+                    ? 'bg-brand-600/30 border-brand-500 text-white shadow-glow'
                     : isDone
-                    ? 'bg-slate-900 border-emerald-500/40 text-slate-300'
-                    : 'bg-slate-950/60 border-slate-800 text-slate-500'
+                    ? 'bg-slate-900 border-emerald-500/50 text-slate-200'
+                    : 'bg-slate-950/80 border-slate-800 text-slate-400'
                 }`}
               >
                 <div className="flex items-center justify-between text-[11px] font-bold mb-1">
@@ -183,7 +183,7 @@ export const SimulationView: React.FC = () => {
                     <span className="w-2 h-2 rounded-full bg-brand-400 animate-ping" />
                   ) : null}
                 </div>
-                <span className="text-xs font-semibold truncate">{item.label}</span>
+                <span className="text-xs font-bold truncate">{item.label}</span>
               </button>
             );
           })}
@@ -191,7 +191,7 @@ export const SimulationView: React.FC = () => {
       </div>
 
       {/* Stage Interactive Viewport Container */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6">
+      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
 
         {/* STAGE 1: PRODUCT BRIEF ANALYST */}
         {activeStep === 1 && (
@@ -201,24 +201,24 @@ export const SimulationView: React.FC = () => {
                 <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">
                   Stage 1 Output Deliverable
                 </span>
-                <h3 className="text-lg font-bold text-white">Extracted Product Brief & Requirement Matrix</h3>
+                <h3 className="text-lg font-black text-white">Extracted Product Brief & Requirement Matrix</h3>
               </div>
-              <span className="px-2.5 py-1 text-xs font-mono bg-brand-500/10 text-brand-300 border border-brand-500/30 rounded-full">
+              <span className="px-3 py-1 text-xs font-mono font-bold bg-brand-500/20 text-brand-300 border border-brand-500/40 rounded-full">
                 Skill: Product Brief Analyst v1.4.0
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+              <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
                 <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Raw User Input Prompt</h4>
-                <p className="text-xs font-mono text-slate-300 bg-slate-900 p-3 rounded-lg border border-slate-800 leading-relaxed italic">
+                <p className="text-xs font-mono text-slate-200 bg-slate-900 p-3.5 rounded-xl border border-slate-800 leading-relaxed italic">
                   "Build a playful, premium website for a set of original cartoon characters. Each character needs personality, emotion states, and a consistent illustration language. The site should feel art-directed, work on mobile, and be accessible."
                 </p>
               </div>
 
-              <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+              <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
                 <h4 className="text-xs font-bold text-brand-400 uppercase tracking-wider">Validated Scope & Acceptance Criteria</h4>
-                <ul className="text-xs text-slate-300 space-y-2 list-disc pl-4 leading-relaxed">
+                <ul className="text-xs text-slate-200 space-y-2 list-disc pl-4 leading-relaxed font-normal">
                   <li><strong>Target Persona</strong>: Creative Technologists & Indie Cartoon Character Fans.</li>
                   <li><strong>Core Feature 1</strong>: Interactive Character Hub (Spark, Luna, Orbit, Pixel).</li>
                   <li><strong>Core Feature 2</strong>: Live Emotion State Toggles (Happy, Curious, Excited).</li>
@@ -237,27 +237,27 @@ export const SimulationView: React.FC = () => {
                 <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">
                   Stage 2 Output Deliverable
                 </span>
-                <h3 className="text-lg font-bold text-white">Visual Identity Tokens & Character Vector Assets</h3>
+                <h3 className="text-lg font-black text-white">Visual Identity Tokens & Character Vector Assets</h3>
               </div>
-              <span className="px-2.5 py-1 text-xs font-mono bg-purple-500/10 text-purple-300 border border-purple-500/30 rounded-full">
+              <span className="px-3 py-1 text-xs font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 rounded-full">
                 Skill: Art Director & Character System v2.1.0
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {CARTOON_CHARACTERS.map(char => (
-                <div key={char.id} className={`p-4 rounded-xl border space-y-3 ${char.bgColor}`}>
+                <div key={char.id} className={`p-5 rounded-2xl border space-y-3 shadow-md ${char.bgColor}`}>
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl">{char.emotions.happy}</span>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-black/40 text-white">
+                    <span className="text-3xl">{char.emotions.happy}</span>
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-black/50 text-white">
                       {char.color}
                     </span>
                   </div>
                   <div>
                     <h4 className="font-extrabold text-sm text-white">{char.name}</h4>
-                    <p className="text-[11px] opacity-80">{char.role}</p>
+                    <p className="text-[11px] opacity-90 font-semibold">{char.role}</p>
                   </div>
-                  <p className="text-[11px] opacity-90 leading-relaxed">{char.description}</p>
+                  <p className="text-[11px] leading-relaxed text-slate-100">{char.description}</p>
                 </div>
               ))}
             </div>
@@ -272,21 +272,21 @@ export const SimulationView: React.FC = () => {
                 <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">
                   Stage 3 Output Deliverable
                 </span>
-                <h3 className="text-lg font-bold text-white">Live Interactive Cartoon Character Web App</h3>
+                <h3 className="text-lg font-black text-white">Live Interactive Cartoon Character Web App</h3>
               </div>
-              <span className="px-2.5 py-1 text-xs font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded-full">
+              <span className="px-3 py-1 text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full">
                 Skill: UI/UX Pro Max v3.5.2
               </span>
             </div>
 
             {/* Live Interactive Web App Rendered Right Here */}
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-inner">
+            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-inner">
               <div className="text-center max-w-lg mx-auto space-y-2">
                 <span className="px-3 py-1 bg-brand-500/20 text-brand-300 border border-brand-500/30 text-[11px] font-bold rounded-full uppercase tracking-widest">
                   Live Cartoon Character Universe
                 </span>
-                <h4 className="text-xl font-black text-white">Meet the Stellar Squad</h4>
-                <p className="text-xs text-slate-400">
+                <h4 className="text-2xl font-black text-white">Meet the Stellar Squad</h4>
+                <p className="text-xs text-slate-300">
                   Select a character and toggle emotion states to test real-time React component state transitions.
                 </p>
               </div>
@@ -297,10 +297,10 @@ export const SimulationView: React.FC = () => {
                   <button
                     key={em}
                     onClick={() => setActiveEmotion(em)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${
+                    className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition-all ${
                       activeEmotion === em
-                        ? 'bg-brand-600 text-white shadow-md shadow-brand-500/20 scale-105'
-                        : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                        ? 'bg-brand-600 text-white shadow-brand scale-105'
+                        : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-800'
                     }`}
                   >
                     {em === 'happy' ? '😊 Happy' : em === 'curious' ? '🧐 Curious' : '🤩 Excited'}
@@ -309,23 +309,23 @@ export const SimulationView: React.FC = () => {
               </div>
 
               {/* Selected Character Showcase Card */}
-              <div className={`p-6 rounded-2xl border ${selectedCharacter.bgColor} transition-all max-w-xl mx-auto space-y-4`}>
+              <div className={`p-6 sm:p-8 rounded-2xl border ${selectedCharacter.bgColor} transition-all max-w-xl mx-auto space-y-4 shadow-xl`}>
                 <div className="flex items-center justify-between">
-                  <div className="text-5xl animate-bounce">
+                  <div className="text-6xl animate-bounce">
                     {selectedCharacter.emotions[activeEmotion]}
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] uppercase font-mono font-bold tracking-widest opacity-75">Active Emotion</span>
-                    <p className="text-sm font-extrabold capitalize text-white">{activeEmotion}</p>
+                    <span className="text-[10px] uppercase font-mono font-bold tracking-widest opacity-80">Active Emotion</span>
+                    <p className="text-base font-extrabold capitalize text-white">{activeEmotion}</p>
                   </div>
                 </div>
 
                 <div>
                   <h5 className="text-2xl font-black text-white">{selectedCharacter.name}</h5>
-                  <p className="text-xs font-semibold opacity-90">{selectedCharacter.role}</p>
+                  <p className="text-xs font-bold opacity-90">{selectedCharacter.role}</p>
                 </div>
 
-                <p className="text-xs leading-relaxed opacity-95">
+                <p className="text-xs leading-relaxed text-slate-100 font-normal">
                   {selectedCharacter.description}
                 </p>
               </div>
@@ -338,12 +338,12 @@ export const SimulationView: React.FC = () => {
                     onClick={() => setSelectedCharacter(c)}
                     className={`p-3 rounded-xl border text-center transition-all ${
                       selectedCharacter.id === c.id
-                        ? 'bg-brand-600 text-white border-brand-400 shadow-md'
+                        ? 'bg-brand-600 text-white border-brand-400 shadow-md scale-105'
                         : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
                     }`}
                   >
-                    <div className="text-2xl mb-1">{c.emotions.happy}</div>
-                    <span className="text-xs font-bold block">{c.name}</span>
+                    <div className="text-3xl mb-1">{c.emotions.happy}</div>
+                    <span className="text-xs font-bold block text-white">{c.name}</span>
                   </button>
                 ))}
               </div>
@@ -359,30 +359,30 @@ export const SimulationView: React.FC = () => {
                 <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">
                   Stage 4 Output Deliverable
                 </span>
-                <h3 className="text-lg font-bold text-white">WCAG 2.2 AA Accessibility Compliance Verification</h3>
+                <h3 className="text-lg font-black text-white">WCAG 2.2 AA Accessibility Compliance Verification</h3>
               </div>
-              <span className="px-2.5 py-1 text-xs font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded-full">
+              <span className="px-3 py-1 text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full">
                 Skill: A11y Auditor Pro v1.8.1
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
-                <span className="text-xs text-slate-400 block font-semibold">Contrast Ratio</span>
+              <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <span className="text-xs text-slate-300 block font-bold">Contrast Ratio</span>
                 <span className="text-2xl font-black text-emerald-400">7.2 : 1 (AAA Pass)</span>
-                <p className="text-[11px] text-slate-400">Exceeds 4.5:1 minimum contrast requirement for all button text.</p>
+                <p className="text-[11px] text-slate-300">Exceeds 4.5:1 minimum contrast requirement for all button text.</p>
               </div>
 
-              <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
-                <span className="text-xs text-slate-400 block font-semibold">Keyboard Focus Traps</span>
+              <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <span className="text-xs text-slate-300 block font-bold">Keyboard Focus Traps</span>
                 <span className="text-2xl font-black text-emerald-400">0 Traps Found</span>
-                <p className="text-[11px] text-slate-400">Full keyboard Tab & Shift-Tab navigation verified.</p>
+                <p className="text-[11px] text-slate-300">Full keyboard Tab & Shift-Tab navigation verified.</p>
               </div>
 
-              <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
-                <span className="text-xs text-slate-400 block font-semibold">Screen Reader ARIA</span>
+              <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <span className="text-xs text-slate-300 block font-bold">Screen Reader ARIA</span>
                 <span className="text-2xl font-black text-emerald-400">100% Compliant</span>
-                <p className="text-[11px] text-slate-400">aria-label, role, and aria-pressed attributes verified on emotion state toggles.</p>
+                <p className="text-[11px] text-slate-300">aria-label, role, and aria-pressed attributes verified on emotion state toggles.</p>
               </div>
             </div>
           </div>
@@ -396,17 +396,17 @@ export const SimulationView: React.FC = () => {
                 <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">
                   Stage 5 Output Deliverable
                 </span>
-                <h3 className="text-lg font-bold text-white">Playwright E2E Automated Test Log & Visual Screenshot</h3>
+                <h3 className="text-lg font-black text-white">Playwright E2E Automated Test Log & Visual Screenshot</h3>
               </div>
-              <span className="px-2.5 py-1 text-xs font-mono bg-sky-500/10 text-sky-300 border border-sky-500/30 rounded-full">
+              <span className="px-3 py-1 text-xs font-mono font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 rounded-full">
                 Skill: Playwright Verifier v2.4.0
               </span>
             </div>
 
-            <div className="bg-slate-950 rounded-xl p-4 border border-slate-800 font-mono text-xs text-emerald-300 space-y-2">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-slate-400">
+            <div className="bg-slate-950 rounded-2xl p-5 border border-slate-800 font-mono text-xs text-emerald-300 space-y-2 shadow-inner">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-slate-300 font-bold">
                 <span>$ npx playwright test tests/cartoon-character-web.spec.ts</span>
-                <span className="text-emerald-400 font-bold">5 passed (1.2s)</span>
+                <span className="text-emerald-400 font-extrabold">5 passed (1.2s)</span>
               </div>
               <p>✓ [chromium] › cartoon-character-web.spec.ts:12:1 › renders 4 cartoon characters with default happy emotion (280ms)</p>
               <p>✓ [chromium] › cartoon-character-web.spec.ts:24:1 › toggles emotion state to curious and updates SVG graphics (310ms)</p>
@@ -421,19 +421,19 @@ export const SimulationView: React.FC = () => {
           <button
             onClick={handlePrevStep}
             disabled={activeStep === 1}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-30 text-white text-xs font-semibold rounded-lg transition-colors"
+            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-30 text-white text-xs font-bold rounded-xl transition-colors"
           >
             Previous Stage
           </button>
 
-          <span className="text-xs text-slate-400 font-mono">
+          <span className="text-xs text-slate-300 font-mono font-bold">
             Stage {activeStep} of 5
           </span>
 
           <button
             onClick={handleNextStep}
             disabled={activeStep === 5}
-            className="px-4 py-2 bg-brand-600 hover:bg-brand-500 disabled:opacity-30 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-md shadow-brand-500/20"
+            className="px-4 py-2 bg-brand-600 hover:bg-brand-500 disabled:opacity-30 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-brand"
           >
             <span>Next Stage</span>
             <ArrowRight className="w-4 h-4" />
